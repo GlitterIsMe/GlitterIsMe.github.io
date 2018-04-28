@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="default">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-BeeOND文档翻译" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/04/28/BeeOND文档翻译/" class="article-date">
+  <time datetime="2018-04-28T03:15:03.000Z" itemprop="datePublished">2018-04-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/04/28/BeeOND文档翻译/">BeeOND文档翻译</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="BeeOND：BeeGFS-On-Demand"><a href="#BeeOND：BeeGFS-On-Demand" class="headerlink" title="BeeOND：BeeGFS On Demand"></a>BeeOND：BeeGFS On Demand</h1><p>现在，集群的计算节点通常配备有内部的flash设备来存储操作系统并为应用提供临时的数据存储。但是使用临时的数据存储常常对于分布式的应用来说并不方便或者说并不实用，因为它们往往需要访问在不同节点上的共享的数据，这就导致SSD的高带宽以及IOPS被浪费。</p>
+<h2 id="BeeOND精妙地释放了计算节点内部的存储设备的潜在性能"><a href="#BeeOND精妙地释放了计算节点内部的存储设备的潜在性能" class="headerlink" title="BeeOND精妙地释放了计算节点内部的存储设备的潜在性能"></a>BeeOND精妙地释放了计算节点内部的存储设备的潜在性能</h2><p>BeeOND通过允许在这样的内部存储设备上为计算任务创建<strong>一个共享的并行文件系统</strong>来解决这个问题。BeeOND实例只存在于任务运行期间以及只存在于它们被分配的节点上。这就为任务提供了快速的、共享的全闪存文件系统，作为一个精妙的Burst Buffer或者一个完美的用于存储临时数据的地方。这可以用来消除许多令人讨厌的I/O访问，这些访问会触发全局文件系统的随机访问。<br><img src="${WP_ASSETS}/2c7a30a6f2edfeb491f70e2db807489f.png" alt=""><br>BeeOND基于一般的BeeGFS服务，这意味计算节点将也会裕兴BeeGFS storage以及metadata服务来提供对这些节点内部存储设备的共享的访问。因为BeeOND不是仅仅访问内部的存储设备而是仅仅将数据存储到内部存储设备的一个子目录下，所以内部存储设备仍然可以由应用作为直接的本地目录来访问。</p>
+<h2 id="即使Global-Cluster-Filesystem并不基于GFS也可以使用BeeOND"><a href="#即使Global-Cluster-Filesystem并不基于GFS也可以使用BeeOND" class="headerlink" title="即使Global Cluster Filesystem并不基于GFS也可以使用BeeOND"></a>即使Global Cluster Filesystem并不基于GFS也可以使用BeeOND</h2><p>虽然推荐将BeeOND与一个全局的BeeGFS文件系统组合使用，但是<strong>无论这个全局共享集群文件系统是否基于BeeGFS，BeeOND都可以独立工作</strong>。BeeOND仅为计算任务创建一个新的挂载点。任何标准工具都可以用于将数据转入或者转出BeeOND，而BeeOND包也包含了一个并行的copy工具用于在BeeOND实例与其他文件系统之间（比如持久化的全局BeeGFS）传输数据。<br>BeeOND实例可以通过一条简单的指令被创建或者销毁，可以很容易地被集成到cluster batch system的prolog以及epilog script中，比如Torque、Slurm或者Univa Grid Engine</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/04/28/BeeOND文档翻译/" data-id="cjgitdkl20000iwuqaqx60hbx" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/04/28/hello-world/" class="article-date">
+  <time datetime="2018-04-28T02:58:15.995Z" itemprop="datePublished">2018-04-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/04/28/hello-world/">Hello World</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/04/28/hello-world/" data-id="cjgitdkl70001iwuqqrissja0" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/04/28/BeeOND文档翻译/">BeeOND文档翻译</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/28/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
