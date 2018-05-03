@@ -43,7 +43,7 @@
     
     <title>
         
-            标签: test | 
+            BeeGFS代码结构 | 
         
         Yiwen&#39;s Blog
     </title>
@@ -215,7 +215,7 @@
     <!-- WebAPP Icons -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Yiwen&#39;s Blog">
-    <meta name="msapplication-starturl" content="http://yoursite.com/tags/test/">
+    <meta name="msapplication-starturl" content="http://yoursite.com/2018/05/03/BeeGFS代码结构/">
     <meta name="msapplication-navbutton-color" content="#0097A7">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="Yiwen&#39;s Blog">
@@ -230,13 +230,16 @@
     
 
     <!-- The Open Graph protocol -->
-    <meta property="og:url" content="http://yoursite.com/tags/test/">
+    <meta property="og:url" content="http://yoursite.com/2018/05/03/BeeGFS代码结构/">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="标签: test | Yiwen&#39;s Blog">
+    <meta property="og:title" content="BeeGFS代码结构 | Yiwen&#39;s Blog">
     <meta property="og:image" content="/img/favicon.png">
     <meta property="og:description" content="">
     
 
+    
+        <meta property="article:published_time" content="Thu May 03 2018 20:36:47 GMT+0800">
+        <meta property="article:modified_time" content="Thu May 03 2018 20:37:19 GMT+0800">
     
 
     <!-- The Twitter Card protocol -->
@@ -244,13 +247,43 @@
 
     <!-- Add canonical link for SEO -->
     
-        <link rel="canonical" href="http://yoursite.com/tags/test/index.html" />
+        <link rel="canonical" href="http://yoursite.com/2018/05/03/BeeGFS代码结构/index.html" />
     
 
     <!-- Structured-data for SEO -->
     
         
 
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "mainEntityOfPage": "http://yoursite.com/2018/05/03/BeeGFS代码结构/index.html",
+    "headline": "BeeGFS代码结构",
+    "datePublished": "Thu May 03 2018 20:36:47 GMT+0800",
+    "dateModified": "Thu May 03 2018 20:37:19 GMT+0800",
+    "author": {
+        "@type": "Person",
+        "name": "Yiwen Zhang",
+        "image": {
+            "@type": "ImageObject",
+            "url": "/img/user_me.jpg"
+        },
+        "description": "写代码是不可能写代码的,这辈子都不可能写代码的"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Yiwen&#39;s Blog",
+        "logo": {
+            "@type":"ImageObject",
+            "url": "/img/favicon.png"
+        }
+    },
+    "keywords": "个人博客",
+    "description": "",
+}
+</script>
 
 
     
@@ -284,99 +317,319 @@
                         </button>
                     
 
-                    <!-- Index Module -->
-<div class="material-index mdl-grid">
-    
-    <div class="locate-thumbnail-symbol"></div>
+                    <!-- Post TOC -->
 
-    <!-- Pin on top -->
+    
+    <!-- Back Button -->
+    <!--
+    <div class="material-back" id="backhome-div" tabindex="0">
+        <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+           href="#" onclick="window.history.back();return false;"
+           target="_self"
+           role="button"
+           data-upgraded=",MaterialButton,MaterialRipple">
+            <i class="material-icons" role="presentation">arrow_back</i>
+            <span class="mdl-button__ripple-container">
+                <span class="mdl-ripple"></span>
+            </span>
+        </a>
+    </div>
+    -->
+
+
+    <!-- Left aligned menu below button -->
+    
+    
+    <button id="post-toc-trigger-btn"
+        class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">format_list_numbered</i>
+    </button>
+
+    <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#代码目录"><span class="post-toc-number">1.</span> <span class="post-toc-text">代码目录</span></a></li></ol>
+    </ul>
     
 
-    <!-- Normal Post -->
-    
-        
-            
-                <!-- Paradox Thumbnail -->
-                <div class="post_entry-module mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col fade out">
-    <!-- Post Thumbnail -->
+
+
+
+<!-- Layouts -->
+
+    <!-- Post Module -->
+    <div class="material-post_container">
+
+        <div class="material-post mdl-grid">
+            <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
+
+                <!-- Post Header(Thumbnail & Title) -->
+                
+    <!-- Paradox Post Header -->
     
         
             <!-- Pure Thumbnail -->
-            <div class="post-thumbnail-pure mdl-card__media mdl-color-text--grey-50" style="background-color:e7e9fd !important">
+            <div class="post_thumbnail-pure mdl-card__media mdl-color-text--grey-50" style="background-color:e7e9fd !important">
         
     
-
-        <!-- Post Title -->
-        <p class="article-headline-p"><a href="/2018/04/28/tags-paper/">tags paper</a></p>
-    </div>
-
-    <!-- Post Excerpt -->
-    <div class="mdl-color-text--grey-600 mdl-card__supporting-text post_entry-content">
-        
-            学习中，测试文本
-
-        
-        &nbsp;&nbsp;&nbsp;
-        <span>
-            <a href="/2018/04/28/tags-paper/" target="_self">阅读全文</a>
-        </span>
-    </div>
-    <!-- Post_entry Info-->
-    <div id="post_entry-info">
-        <div id="post_entry-left-info" class="mdl-card__supporting-text meta mdl-color-text--grey-600 ">
-            <!-- Author Avatar -->
-            <div id="author-avatar">
-                <img src="/img/user_me.jpg" width="44px" height="44px" alt="Yiwen Zhang's avatar">
-            </div>
-            <div>
-                <strong>Yiwen Zhang</strong>
-                <span>4月 28, 2018</span>
-            </div>
+            <p class="article-headline-p">
+                BeeGFS代码结构
+            </p>
         </div>
-        <div id="post_entry-right-info">
-          
-              <!-- Category -->
-              <span class="post_entry-category">
-                  <a class="post_category-link" href="/categories/hexo/">hexo</a>
-              </span>
-            
 
-            
 
-            
 
-            <!-- Post Views -->
-            <span class="post_entry-views">
-            </span>
-        </div>
+
+
+                
+                    <!-- Paradox Post Info -->
+                    <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
+
+    <!-- Author Avatar -->
+    <div id="author-avatar">
+        <img src="/img/user_me.jpg" width="44px" height="44px" alt="Author Avatar"/>
     </div>
+    <!-- Author Name & Date -->
+    <div>
+        <strong>Yiwen Zhang</strong>
+        <span>5月 03, 2018</span>
+    </div>
+
+    <div class="section-spacer"></div>
+
+    <!-- Favorite -->
+    <!--
+        <button id="article-functions-like-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon btn-like">
+            <i class="material-icons" role="presentation">favorite</i>
+            <span class="visuallyhidden">favorites</span>
+        </button>
+    -->
+
+    <!-- Qrcode -->
+    
+
+    <!-- Tags (bookmark) -->
+    
+
+    <!-- Share -->
+    
+        <button id="article-fuctions-share-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+    <i class="material-icons" role="presentation">share</i>
+    <span class="visuallyhidden">share</span>
+</button>
+<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-fuctions-share-button">
+    
+
+    
+
+    <!-- Share Weibo -->
+    
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=BeeGFS代码结构&url=http://yoursite.com/2018/05/03/BeeGFS代码结构/index.html&pic=http://yoursite.com/img/favicon.png&searchPic=false&style=simple" target="_blank">
+            <li class="mdl-menu__item">
+                分享到微博
+            </li>
+        </a>
+    
+
+    <!-- Share Twitter -->
+    
+
+    <!-- Share Facebook -->
+    
+
+    <!-- Share Google+ -->
+    
+        <a class="post_share-link" href="https://plus.google.com/share?url=http://yoursite.com/2018/05/03/BeeGFS代码结构/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Google+
+            </li>
+        </a>
+    
+
+    <!-- Share LinkedIn -->
+    
+
+    <!-- Share QQ -->
+    
+
+    <!-- Share Telegram -->
+    
+</ul>
+
+    
 </div>
 
-            
-            
+                
+
+                <!-- Post Content -->
+                <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
+    
+        <h1 id="代码目录"><a href="#代码目录" class="headerlink" title="代码目录"></a>代码目录</h1><table>
+<thead>
+<tr>
+<th>目录</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>auto_pacakage</td>
+<td>安装相关</td>
+</tr>
+<tr>
+<td>beeond</td>
+<td>beeond相关脚本文件（start、end等）</td>
+</tr>
+<tr>
+<td>beeond_thridparty</td>
+<td>beeond第三方库</td>
+</tr>
+<tr>
+<td>beeond_thirdparty_gpl</td>
+<td>beeond第三方库</td>
+</tr>
+<tr>
+<td>build</td>
+<td>编译相关</td>
+</tr>
+<tr>
+<td>client_devel</td>
+<td></td>
+</tr>
+<tr>
+<td><font color="red"><strong>client_module</strong></font></td>
+<td>客户端内核模块</td>
+</tr>
+<tr>
+<td>client_tests</td>
+<td>客户端测试</td>
+</tr>
+<tr>
+<td>common</td>
+<td></td>
+</tr>
+<tr>
+<td>common_package</td>
+<td></td>
+</tr>
+<tr>
+<td><font color="red"><strong>ctl</strong></font></td>
+<td>beegfs-ctl工具</td>
+</tr>
+<tr>
+<td>deeper_cached</td>
+<td></td>
+</tr>
+<tr>
+<td>deeper_common</td>
+<td></td>
+</tr>
+<tr>
+<td>deeper_lib</td>
+<td></td>
+</tr>
+<tr>
+<td>event_listener</td>
+<td>事件监听？</td>
+</tr>
+<tr>
+<td>fsck</td>
+<td></td>
+</tr>
+<tr>
+<td><font color="red"><strong>helperd</strong></font></td>
+<td>为client提供辅助功能(DNS, LOG等)</td>
+</tr>
+<tr>
+<td>java_lib</td>
+<td>java库</td>
+</tr>
+<tr>
+<td><font color="red"><strong>meta</strong></font></td>
+<td>元数据相关</td>
+</tr>
+<tr>
+<td><font color="red"><strong>mgmtd</strong></font></td>
+<td>一个集群系统工具？</td>
+</tr>
+<tr>
+<td>mon</td>
+<td></td>
+</tr>
+<tr>
+<td>opentk_lib</td>
+<td></td>
+</tr>
+<tr>
+<td><font color="red"><strong>storage</strong></font></td>
+<td>存储相关</td>
+</tr>
+<tr>
+<td>testing</td>
+<td>系统测试</td>
+</tr>
+<tr>
+<td>thridparty</td>
+<td>第三方库</td>
+</tr>
+<tr>
+<td>upgrade</td>
+<td></td>
+</tr>
+<tr>
+<td>utils</td>
+<td></td>
+</tr>
+<tr>
+<td>utils_devel</td>
+</tr>
+</tbody>
+</table>
+
         
     
 
     
-
-    
-        <script type="text/ls-javascript" id="thumbnail-script">
-    var randomNum;
-
-    var locatePost = $('.locate-thumbnail-symbol').next();
-    for(var i = 0; i < 10; i++) {
-        randomNum = Math.floor(Math.random() * 19 + 1);
-
-        locatePost.children('.post_thumbnail-random').attr('id', 'random_thumbnail-'+randomNum);
-        locatePost.children('.post_thumbnail-random').attr('data-original', '/img/random/material-' + randomNum + '.png');
-    $('.post_thumbnail-random').addClass('lazy');
-
-        locatePost = locatePost.next();
-    }
-</script>
-
-    
 </div>
+
+
+                
+
+                <!-- Post Comments -->
+                
+                    
+                
+            </div>
+
+            <!-- Post Prev & Next Nav -->
+            <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
+    <!-- Prev Nav -->
+    
+        <a href="/2018/05/03/BeeGFS一个介绍PPT/" id="post_nav-newer" class="prev-content">
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_back</i>
+            </button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            新篇
+        </a>
+    
+
+    <!-- Section Spacer -->
+    <div class="section-spacer"></div>
+
+    <!-- Next Nav -->
+    
+        <a href="/2018/05/02/BeeOND安装与使用/" id="post_nav-older" class="next-content">
+            旧篇
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_forward</i>
+            </button>
+        </a>
+    
+</nav>
+
+        </div>
+    </div>
+
 
 
                     
@@ -529,6 +782,14 @@ It will not impact the appearance and can give developers a lot of support :)
 </aside>
 
                     
+
+                    
+                        <!-- Footer Top Button -->
+                        <div id="back-to-top" class="toTop-wrap">
+    <a href="#top" class="toTop">
+        <i class="material-icons footer_top-i">expand_less</i>
+    </a>
+</div>
 
                     
 
