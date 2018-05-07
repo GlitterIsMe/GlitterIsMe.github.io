@@ -6,20 +6,28 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>BeeGFS代码结构 | Yiwen&#39;s Blog</title>
+  <title>DarkSouls | Yiwen&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="BeeGFS代码目录整理（非完整）">
-<meta name="keywords" content="BeeGFS">
+  <meta name="description" content="我的传火之路（0）太阳骑士的前世今生一时兴起想写点东西记录一下这次玩黑魂3的（受苦）过程，当然不知道何年何月才能通关，而且也不知道这个什么鬼记录到底能不能连载下去，那么就开始吧（摊手）。">
+<meta name="keywords" content="DarkSouls3">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BeeGFS代码结构">
-<meta property="og:url" content="http://yoursite.com/2018/05/03/BeeGFS代码结构/index.html">
+<meta property="og:title" content="DarkSouls">
+<meta property="og:url" content="http://yoursite.com/2018/05/07/DarkSoulsIII-0/index.html">
 <meta property="og:site_name" content="Yiwen&#39;s Blog">
-<meta property="og:description" content="BeeGFS代码目录整理（非完整）">
+<meta property="og:description" content="我的传火之路（0）太阳骑士的前世今生一时兴起想写点东西记录一下这次玩黑魂3的（受苦）过程，当然不知道何年何月才能通关，而且也不知道这个什么鬼记录到底能不能连载下去，那么就开始吧（摊手）。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-05-04T08:15:26.998Z">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fr2zku4igaj20fj08r74q.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fr2zafkj9zj204v05zwex.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fr2z7fenoij20c208baem.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fr2znw10rtj20fk08raai.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fr2zeqzs75j210g0mqafq.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fr2zf86le6j20fm030dgl.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fr2zhygp6fj20r807875b.jpg">
+<meta property="og:updated_time" content="2018-05-07T11:17:00.253Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="BeeGFS代码结构">
-<meta name="twitter:description" content="BeeGFS代码目录整理（非完整）">
+<meta name="twitter:title" content="DarkSouls">
+<meta name="twitter:description" content="我的传火之路（0）太阳骑士的前世今生一时兴起想写点东西记录一下这次玩黑魂3的（受苦）过程，当然不知道何年何月才能通关，而且也不知道这个什么鬼记录到底能不能连载下去，那么就开始吧（摊手）。">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fr2zku4igaj20fj08r74q.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Yiwen&#39;s Blog" type="application/atom+xml">
   
@@ -159,148 +167,31 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-BeeGFS代码结构" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-DarkSoulsIII-0" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      BeeGFS代码结构
+      DarkSouls
     </h1>
   
 
         
-        <a href="/2018/05/03/BeeGFS代码结构/" class="archive-article-date">
-  	<time datetime="2018-05-03T12:36:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-03</time>
+        <a href="/2018/05/07/DarkSoulsIII-0/" class="archive-article-date">
+  	<time datetime="2018-05-07T11:14:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-07</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>BeeGFS代码目录整理（非完整）<br><a id="more"></a></p>
-<h1 id="代码目录"><a href="#代码目录" class="headerlink" title="代码目录"></a>代码目录</h1><table>
-<thead>
-<tr>
-<th>目录</th>
-<th>备注</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>auto_pacakage</td>
-<td>安装相关</td>
-</tr>
-<tr>
-<td>beeond</td>
-<td>beeond相关脚本文件（start、end等）</td>
-</tr>
-<tr>
-<td>beeond_thridparty</td>
-<td>beeond第三方库</td>
-</tr>
-<tr>
-<td>beeond_thirdparty_gpl</td>
-<td>beeond第三方库</td>
-</tr>
-<tr>
-<td>build</td>
-<td>编译相关</td>
-</tr>
-<tr>
-<td>client_devel</td>
-<td></td>
-</tr>
-<tr>
-<td><font color="red"><strong>client_module</strong></font></td>
-<td>客户端内核模块</td>
-</tr>
-<tr>
-<td>client_tests</td>
-<td>客户端测试</td>
-</tr>
-<tr>
-<td>common</td>
-<td></td>
-</tr>
-<tr>
-<td>common_package</td>
-<td></td>
-</tr>
-<tr>
-<td><font color="red"><strong>ctl</strong></font></td>
-<td>beegfs-ctl工具</td>
-</tr>
-<tr>
-<td>deeper_cached</td>
-<td></td>
-</tr>
-<tr>
-<td>deeper_common</td>
-<td></td>
-</tr>
-<tr>
-<td>deeper_lib</td>
-<td></td>
-</tr>
-<tr>
-<td>event_listener</td>
-<td>事件监听？</td>
-</tr>
-<tr>
-<td>fsck</td>
-<td></td>
-</tr>
-<tr>
-<td><font color="red"><strong>helperd</strong></font></td>
-<td>为client提供辅助功能(DNS, LOG等)</td>
-</tr>
-<tr>
-<td>java_lib</td>
-<td>java库</td>
-</tr>
-<tr>
-<td><font color="red"><strong>meta</strong></font></td>
-<td>元数据相关</td>
-</tr>
-<tr>
-<td><font color="red"><strong>mgmtd</strong></font></td>
-<td>一个集群系统工具？</td>
-</tr>
-<tr>
-<td>mon</td>
-<td></td>
-</tr>
-<tr>
-<td>opentk_lib</td>
-<td></td>
-</tr>
-<tr>
-<td><font color="red"><strong>storage</strong></font></td>
-<td>存储相关</td>
-</tr>
-<tr>
-<td>testing</td>
-<td>系统测试</td>
-</tr>
-<tr>
-<td>thridparty</td>
-<td>第三方库</td>
-</tr>
-<tr>
-<td>upgrade</td>
-<td></td>
-</tr>
-<tr>
-<td>utils</td>
-<td></td>
-</tr>
-<tr>
-<td>utils_devel</td>
-</tr>
-</tbody>
-</table>
+        <h1 id="我的传火之路（0）"><a href="#我的传火之路（0）" class="headerlink" title="我的传火之路（0）"></a>我的传火之路（0）</h1><h2 id="太阳骑士的前世今生"><a href="#太阳骑士的前世今生" class="headerlink" title="太阳骑士的前世今生"></a>太阳骑士的前世今生</h2><p>一时兴起想写点东西记录一下这次玩黑魂3的（受苦）过程，当然不知道何年何月才能通关，而且也不知道这个什么鬼记录到底能不能连载下去，那么就开始吧（摊手）。<br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fr2zku4igaj20fj08r74q.jpg" alt="太阳骑士"></p>
+<a id="more"></a>
+<p>先废话一下玩黑魂3的前因后果，就当做一个Introduction(?)部分吧。最开始接触黑魂系列应该还是在好友的安利下去看了老菊的黑魂3实况，当时黑魂3刚发售，各大主播都开始了全新的受苦之旅。作为一个完全不了解魂系列的萌新，虽然故事背景啊人物角色啊一无所知，但在董事长欢声笑语打出GG的过程中一集一集追下去，居然有了一种追番的快感（<del>四月最强番</del>）。</p>
+<p><div align="center"><br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fr2zafkj9zj204v05zwex.jpg" alt="老菊系列"><br></div><br>于是后来的某一天为了体验一下黑魂系列，去下载了<del>3DM正版</del>黑魂1。当然，不看攻略的我不出意外地被不死院的老哥按在地上摩擦了，能体会那种一个萌新拿着一把折断的直剑拼命戳不死院恶魔的绝望吗？</p>
+<p><div align="center"><br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fr2z7fenoij20c208baem.jpg" alt="对，就是这样按在地上"><br></div><br>更绝望的是后来才知道恶魔可以不用打（手动扇子脸）。还有逃过不死院恶魔之后到达祭祀场之后，不看攻略瞎XX转悠，到一个满是骷髅哥的地方，被疯狂教做人。再加上当时完全不知道负重的概念，穿满盔甲的我奇怪为什么我不能像视频里一样自由翻滚。最后，被愉快地劝退了（活该不看攻略系列）。<br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fr2znw10rtj20fk08raai.jpg" alt=""><br>再后来，就遇到了Steam的黑魂2打折（为什么不买黑魂3，那你可能需要去问我的旧电脑了），于是就入手了黑魂2原罪学者版，<del>在攻略的帮助下</del>正式开始了受苦之旅。不过可歌可泣的是在一次次死亡（<del>落命</del>）之后，我还是通关了黑魂2的本体，<del>为什么强调本体，当然是因为DLC2还没打完啦</del>，最后在DLC2跟烟老师缠绵悱恻一下午终于成功按倒之后，再加上换电脑，于是魂2就正式搁置了。<br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fr2zeqzs75j210g0mqafq.jpg" alt="烟老师"><br>作为第一次通关的魂系列，虽然魂2可能在难度（<del>反人类的扣血条</del>）、关卡设计以及剧情上饱受魂系列粉丝的诟病，但是个人看来，这80个小时的游戏体验上，还是相当精致的一款游戏，足以用回味无穷来形容，当然这种感觉可能跟考完试之后就再也不会觉得这门课难这种感觉类似，典型的是忘了自己受苦的过程。<br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fr2zf86le6j20fm030dgl.jpg" alt="黑魂2时间"><br>一年之后，杉果黑魂3特价了，而且正好毕业升级了电脑（玩守望终于不是PPT了），于是就赶在活动入手了魂3，然而入手了之后并没有立刻开始玩，我都花钱买游戏了，为什么还要我花时间来玩对不对？当时正好赶上PS4上入手了女神异闻录5（Persona5，P5），于是以这个为借口黑魂3一直躺在我的Steam库里，直到安利我魂系列的好友升级了电脑，直到好友通关了黑魂3，直到我通关了P5、奥德赛，直到好友都去<del>拆迁队</del>彩虹六号了，差不多半年之后，某个一时兴起的星期五，百无聊赖想找点事做的我（<del>为什么不能好好看论文</del>），重新燃起了传火的决心，去感受宫崎老贼的爱。<br>于是，太阳骑士又穿上他的盔甲，拿起武器，开始了新的传火之旅。<br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fr2zhygp6fj20r807875b.jpg" alt="黑魂3"><br>（噫居然瞎扯了这么多，那么就作为一个前传第0话吧<del>计划通</del></p>
 
       
 
@@ -314,7 +205,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">BeeGFS</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">DarkSouls3</a>
         		</li>
       		
 		</ul>
@@ -326,7 +217,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/Tech//" class="article-tag-list-link color5">Tech</a>
+        			<a href="/categories/Hobby//" class="article-tag-list-link color1">Hobby</a>
         		</li>
       		
 		</ul>
@@ -381,7 +272,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/05/03/BeeGFS代码结构/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/05/07/DarkSoulsIII-0/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -395,18 +286,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2018/05/03/BeeGFS一个介绍PPT/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          BeeGFS一个介绍PPT
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/05/02/BeeOND安装与使用/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">BeeOND安装与使用</div>
+    <a href="/2018/05/03/BeeGFS一个介绍PPT/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">BeeGFS一个介绍PPT</div>
       <i class="icon-circle-right"></i>
     </a>
   
