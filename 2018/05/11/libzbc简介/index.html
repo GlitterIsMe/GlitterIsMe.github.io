@@ -20,7 +20,7 @@
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/005xaSPRgy1fr76j5inh9j30kz0cjjt0.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/005xaSPRgy1fr76lah8ygj30l1049jrr.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/005xaSPRgy1fr76qb7qv5j30bu06b3yo.jpg">
-<meta property="og:updated_time" content="2018-05-11T02:47:27.749Z">
+<meta property="og:updated_time" content="2018-05-11T02:49:18.509Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="libzbc简介">
 <meta name="twitter:description" content="libzbc and lkvslibzbcOverview libzbc库提供了接口用于操作支持Zoned Block Command(ZBC)以及Zoned device ATA Command set(ZAC)这两个指令集的设备 libzbc基于INCITS技术协会T10和T13起草的ZBC/ZAC标准实现 允许应用访问ZBC HM磁盘 通过直接执行SCSI(SG_IO)命令实现访问zone的">
@@ -194,7 +194,9 @@
 </li>
 </ul>
 <a id="more"></a>
-<h2 id="从图上可以看到，对于实际的ZBC磁盘，libzbc是直接通过SCSI命令实现访问磁盘的，跳过了VFS层以及块层。而在仿真模式，libzbc是通过系统调用read-write进行IO，此时会经过VFS层。"><a href="#从图上可以看到，对于实际的ZBC磁盘，libzbc是直接通过SCSI命令实现访问磁盘的，跳过了VFS层以及块层。而在仿真模式，libzbc是通过系统调用read-write进行IO，此时会经过VFS层。" class="headerlink" title="从图上可以看到，对于实际的ZBC磁盘，libzbc是直接通过SCSI命令实现访问磁盘的，跳过了VFS层以及块层。而在仿真模式，libzbc是通过系统调用read/write进行IO，此时会经过VFS层。"></a>从图上可以看到，对于实际的ZBC磁盘，libzbc是直接通过SCSI命令实现访问磁盘的，跳过了VFS层以及块层。而在仿真模式，libzbc是通过系统调用read/write进行IO，此时会经过VFS层。</h2><h3 id="libzbc-API"><a href="#libzbc-API" class="headerlink" title="libzbc API"></a>libzbc API</h3><p><strong>Main：</strong></p>
+<p>从图上可以看到，对于实际的ZBC磁盘，libzbc是直接通过SCSI命令实现访问磁盘的，跳过了VFS层以及块层。而在仿真模式，libzbc是通过系统调用read/write进行IO，此时会经过VFS层。</p>
+<hr>
+<h3 id="libzbc-API"><a href="#libzbc-API" class="headerlink" title="libzbc API"></a>libzbc API</h3><p><strong>Main：</strong></p>
 <div align="center"><br><img src="https://ws1.sinaimg.cn/large/005xaSPRgy1fr76j5inh9j30kz0cjjt0.jpg" alt="libzbc interface"><br></div><br><strong>Addition：</strong><br>这两个函数用于初始化<strong>模拟ZBC设备</strong>，zone的配置信息会在zbc_close中记录到磁盘<br><div align="center"><br>  <img src="https://ws1.sinaimg.cn/large/005xaSPRgy1fr76lah8ygj30l1049jrr.jpg" alt=""><br></div>
 
 <hr>
@@ -437,11 +439,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">test</a>
+                <a href="javascript:void(0)" class="js-tag color4">Web</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Web</a>
+                <a href="javascript:void(0)" class="js-tag color5">test</a>
               </li>
             
             <div class="clearfix"></div>
