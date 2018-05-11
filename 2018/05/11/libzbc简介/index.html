@@ -20,7 +20,7 @@
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/005xaSPRgy1fr76j5inh9j30kz0cjjt0.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/005xaSPRgy1fr76lah8ygj30l1049jrr.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/005xaSPRgy1fr76qb7qv5j30bu06b3yo.jpg">
-<meta property="og:updated_time" content="2018-05-11T02:49:18.509Z">
+<meta property="og:updated_time" content="2018-05-11T07:41:04.465Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="libzbc简介">
 <meta name="twitter:description" content="libzbc and lkvslibzbcOverview libzbc库提供了接口用于操作支持Zoned Block Command(ZBC)以及Zoned device ATA Command set(ZAC)这两个指令集的设备 libzbc基于INCITS技术协会T10和T13起草的ZBC/ZAC标准实现 允许应用访问ZBC HM磁盘 通过直接执行SCSI(SG_IO)命令实现访问zone的">
@@ -201,7 +201,9 @@
 
 <hr>
 <h2 id="Linear-Key-Value-Store-Architecture"><a href="#Linear-Key-Value-Store-Architecture" class="headerlink" title="Linear Key Value Store Architecture"></a>Linear Key Value Store Architecture</h2><p>lkvs：一个简单的append-only的KV系统，通过libzbc查询磁盘信息以及读写数据<br>结构：</p>
-<p><div align="center"><br><img src="https://ws1.sinaimg.cn/large/005xaSPRgy1fr76qb7qv5j30bu06b3yo.jpg" alt=""><br></div><br><em>为什么还有一个device file层</em><br><em>需要了解一下块设备文件的资料</em></p>
+<div align="center"><br><img src="https://ws1.sinaimg.cn/large/005xaSPRgy1fr76qb7qv5j30bu06b3yo.jpg" alt=""><br></div>
+
+<p><em>需要了解一下块设备文件的资料</em></p>
 <blockquote>
 <p>SMR Impact on Linux Storage Subsystem, Jorge Campello, Adam Manzanares, HGST<br><a href="https://github.com/hgst/libzbc" target="_blank" rel="noopener">https://github.com/hgst/libzbc</a></p>
 </blockquote>
