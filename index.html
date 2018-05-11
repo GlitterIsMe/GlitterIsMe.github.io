@@ -159,6 +159,101 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-libzbc简介" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/05/11/libzbc简介/">libzbc简介</a>
+    </h1>
+  
+
+        
+        <a href="/2018/05/11/libzbc简介/" class="archive-article-date">
+  	<time datetime="2018-05-11T02:44:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-11</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="libzbc-and-lkvs"><a href="#libzbc-and-lkvs" class="headerlink" title="libzbc and lkvs"></a>libzbc and lkvs</h1><h2 id="libzbc"><a href="#libzbc" class="headerlink" title="libzbc"></a>libzbc</h2><h3 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h3><ul>
+<li>libzbc库提供了接口用于操作支持Zoned Block Command(ZBC)以及Zoned device ATA Command set(ZAC)这两个指令集的设备</li>
+<li>libzbc基于INCITS技术协会T10和T13起草的ZBC/ZAC标准实现</li>
+<li>允许应用访问ZBC HM磁盘</li>
+<li>通过直接执行<strong>SCSI(SG_IO)命令</strong>实现访问zone的信息以及读写操作</li>
+<li>为标准的SAS/SATA块设备上的操作提供ZBC模拟层（libzbc库内部会模拟磁盘的zone配置）<div align="center"><br><img src="https://ws1.sinaimg.cn/large/005xaSPRgy1fr76ar1pt4j30jr0890t5.jpg" alt="libzbc两种模式对比"><br></div>
+
+</li>
+</ul>
+        
+          <a class="article-more-a" href="/2018/05/11/libzbc简介/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">libzbc</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Tech//" class="article-tag-list-link color5">Tech</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/05/11/libzbc简介/">阅读全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-前端学习路线" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1031,11 +1126,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Web</a>
+                <a href="javascript:void(0)" class="js-tag color2">libzbc</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">test</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Web</a>
               </li>
             
             <div class="clearfix"></div>

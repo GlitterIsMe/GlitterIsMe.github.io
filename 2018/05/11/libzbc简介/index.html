@@ -6,18 +6,25 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Tag: BeeOND | Glitter&#39;s Blog</title>
+  <title>libzbc简介 | Glitter&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="用于本人不定期更新一些杂七杂八的东西">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Glitter&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/tags/BeeOND/index.html">
+  <meta name="description" content="libzbc and lkvslibzbcOverview libzbc库提供了接口用于操作支持Zoned Block Command(ZBC)以及Zoned device ATA Command set(ZAC)这两个指令集的设备 libzbc基于INCITS技术协会T10和T13起草的ZBC/ZAC标准实现 允许应用访问ZBC HM磁盘 通过直接执行SCSI(SG_IO)命令实现访问zone的">
+<meta name="keywords" content="libzbc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="libzbc简介">
+<meta property="og:url" content="http://yoursite.com/2018/05/11/libzbc简介/index.html">
 <meta property="og:site_name" content="Glitter&#39;s Blog">
-<meta property="og:description" content="用于本人不定期更新一些杂七杂八的东西">
+<meta property="og:description" content="libzbc and lkvslibzbcOverview libzbc库提供了接口用于操作支持Zoned Block Command(ZBC)以及Zoned device ATA Command set(ZAC)这两个指令集的设备 libzbc基于INCITS技术协会T10和T13起草的ZBC/ZAC标准实现 允许应用访问ZBC HM磁盘 通过直接执行SCSI(SG_IO)命令实现访问zone的">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/005xaSPRgy1fr76ar1pt4j30jr0890t5.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/005xaSPRgy1fr76j5inh9j30kz0cjjt0.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/005xaSPRgy1fr76lah8ygj30l1049jrr.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/005xaSPRgy1fr76qb7qv5j30bu06b3yo.jpg">
+<meta property="og:updated_time" content="2018-05-11T02:46:13.491Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Glitter&#39;s Blog">
-<meta name="twitter:description" content="用于本人不定期更新一些杂七杂八的东西">
+<meta name="twitter:title" content="libzbc简介">
+<meta name="twitter:description" content="libzbc and lkvslibzbcOverview libzbc库提供了接口用于操作支持Zoned Block Command(ZBC)以及Zoned device ATA Command set(ZAC)这两个指令集的设备 libzbc基于INCITS技术协会T10和T13起草的ZBC/ZAC标准实现 允许应用访问ZBC HM磁盘 通过直接执行SCSI(SG_IO)命令实现访问zone的">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/005xaSPRgy1fr76ar1pt4j30jr0890t5.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Glitter&#39;s Blog" type="application/atom+xml">
   
@@ -157,48 +164,65 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-libzbc简介" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/05/02/BeeOND安装与使用/" class="archive-article-date">
-  	<time datetime="2018-05-02T11:37:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-02</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/05/02/BeeOND安装与使用/">BeeOND安装与使用</a>
+    <h1 class="article-title" itemprop="name">
+      libzbc简介
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2018/05/11/libzbc简介/" class="archive-article-date">
+  	<time datetime="2018-05-11T02:44:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-11</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="libzbc-and-lkvs"><a href="#libzbc-and-lkvs" class="headerlink" title="libzbc and lkvs"></a>libzbc and lkvs</h1><h2 id="libzbc"><a href="#libzbc" class="headerlink" title="libzbc"></a>libzbc</h2><h3 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h3><ul>
+<li>libzbc库提供了接口用于操作支持Zoned Block Command(ZBC)以及Zoned device ATA Command set(ZAC)这两个指令集的设备</li>
+<li>libzbc基于INCITS技术协会T10和T13起草的ZBC/ZAC标准实现</li>
+<li>允许应用访问ZBC HM磁盘</li>
+<li>通过直接执行<strong>SCSI(SG_IO)命令</strong>实现访问zone的信息以及读写操作</li>
+<li>为标准的SAS/SATA块设备上的操作提供ZBC模拟层（libzbc库内部会模拟磁盘的zone配置）<div align="center"><br><img src="https://ws1.sinaimg.cn/large/005xaSPRgy1fr76ar1pt4j30jr0890t5.jpg" alt="libzbc两种模式对比"><br></div>
+
+</li>
+</ul>
+<a id="more"></a>
+<h2 id="从图上可以看到，对于实际的ZBC磁盘，libzbc是直接通过SCSI命令实现访问磁盘的，跳过了VFS层以及块层。而在仿真模式，libzbc是通过系统调用read-write进行IO，此时会经过VFS层。"><a href="#从图上可以看到，对于实际的ZBC磁盘，libzbc是直接通过SCSI命令实现访问磁盘的，跳过了VFS层以及块层。而在仿真模式，libzbc是通过系统调用read-write进行IO，此时会经过VFS层。" class="headerlink" title="从图上可以看到，对于实际的ZBC磁盘，libzbc是直接通过SCSI命令实现访问磁盘的，跳过了VFS层以及块层。而在仿真模式，libzbc是通过系统调用read/write进行IO，此时会经过VFS层。"></a>从图上可以看到，对于实际的ZBC磁盘，libzbc是直接通过SCSI命令实现访问磁盘的，跳过了VFS层以及块层。而在仿真模式，libzbc是通过系统调用read/write进行IO，此时会经过VFS层。</h2><h3 id="libzbc-API"><a href="#libzbc-API" class="headerlink" title="libzbc API"></a>libzbc API</h3><p><strong>Main：</strong></p>
+<div align="center"><br><img src="https://ws1.sinaimg.cn/large/005xaSPRgy1fr76j5inh9j30kz0cjjt0.jpg" alt="libzbc interface"><br></div><br><strong>Addition：</strong><br>这两个函数用于初始化<strong>模拟ZBC设备</strong>，zone的配置信息会在zbc_close中记录到磁盘<br><div align="center"><br>  <img src="https://ws1.sinaimg.cn/large/005xaSPRgy1fr76lah8ygj30l1049jrr.jpg" alt=""><br></div>
+
+<hr>
+<h2 id="Linear-Key-Value-Store-Architecture"><a href="#Linear-Key-Value-Store-Architecture" class="headerlink" title="Linear Key Value Store Architecture"></a>Linear Key Value Store Architecture</h2><p>lkvs：一个简单的append-only的KV系统，通过libzbc查询磁盘信息以及读写数据<br>结构：</p>
+<p><div align="center"><br><img src="https://ws1.sinaimg.cn/large/005xaSPRgy1fr76qb7qv5j30bu06b3yo.jpg" alt=""><br></div><br><em>为什么还有一个device file层</em><br><em>需要了解一下块设备文件的资料</em></p>
+<blockquote>
+<p>SMR Impact on Linux Storage Subsystem, Jorge Campello, Adam Manzanares, HGST<br><a href="https://github.com/hgst/libzbc" target="_blank" rel="noopener">https://github.com/hgst/libzbc</a></p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">BeeOND</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">libzbc</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -211,66 +235,104 @@
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/05/11/libzbc简介/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/04/28/BeeOND文档翻译/" class="archive-article-date">
-  	<time datetime="2018-04-28T03:15:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-28</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2018/05/10/前端学习路线/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">前端学习路线</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/04/28/BeeOND文档翻译/">BeeOND文档翻译</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">BeeOND</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Tech//" class="article-tag-list-link color5">Tech</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+
   
   
-    </div></section>
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -293,9 +355,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
