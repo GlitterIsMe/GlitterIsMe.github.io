@@ -8,13 +8,13 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>TiDB学习 | Glitter&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="https://pingcap.com/docs-cn/https://github.com/pingcap/tikvhttps://github.com/pingcap/tidb  TiDB简介与整体架构简介TiDB是一个开源分布式HTAP数据库（Hybrid Transactional and Analytical Processing），主要特点是结合了传统的RDBMS以及NoSQL。目标">
+  <meta name="description" content="TiDB简介与整体架构简介TiDB是一个开源分布式HTAP数据库（Hybrid Transactional and Analytical Processing），主要特点是结合了传统的RDBMS以及NoSQL。目标是为OLTP以及OLAP场景提供一站式解决方案。特性：  兼容MySQL：无需修改代码直接从MySQL迁移到TiDB 支持水平无限扩展：增加节点即可实现扩展 强一致性：标准ACID事务">
 <meta name="keywords" content="TiDB,TiKV">
 <meta property="og:type" content="article">
 <meta property="og:title" content="TiDB学习">
 <meta property="og:url" content="http://yoursite.com/2018/06/05/TiDB学习/index.html">
 <meta property="og:site_name" content="Glitter&#39;s Blog">
-<meta property="og:description" content="https://pingcap.com/docs-cn/https://github.com/pingcap/tikvhttps://github.com/pingcap/tidb  TiDB简介与整体架构简介TiDB是一个开源分布式HTAP数据库（Hybrid Transactional and Analytical Processing），主要特点是结合了传统的RDBMS以及NoSQL。目标">
+<meta property="og:description" content="TiDB简介与整体架构简介TiDB是一个开源分布式HTAP数据库（Hybrid Transactional and Analytical Processing），主要特点是结合了传统的RDBMS以及NoSQL。目标是为OLTP以及OLAP场景提供一站式解决方案。特性：  兼容MySQL：无需修改代码直接从MySQL迁移到TiDB 支持水平无限扩展：增加节点即可实现扩展 强一致性：标准ACID事务">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fs0dqkqnhlj20ge0c0mxu.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fs0bkxz9vgj20mu0ahdgm.jpg">
@@ -25,10 +25,10 @@
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fs0c5laefuj20kw0afwfe.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fs0cmgwzmfj20gm07xaak.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fs0cmgrlz8j20ks082jru.jpg">
-<meta property="og:updated_time" content="2018-06-05T08:29:11.914Z">
+<meta property="og:updated_time" content="2018-06-05T08:32:10.308Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="TiDB学习">
-<meta name="twitter:description" content="https://pingcap.com/docs-cn/https://github.com/pingcap/tikvhttps://github.com/pingcap/tidb  TiDB简介与整体架构简介TiDB是一个开源分布式HTAP数据库（Hybrid Transactional and Analytical Processing），主要特点是结合了传统的RDBMS以及NoSQL。目标">
+<meta name="twitter:description" content="TiDB简介与整体架构简介TiDB是一个开源分布式HTAP数据库（Hybrid Transactional and Analytical Processing），主要特点是结合了传统的RDBMS以及NoSQL。目标是为OLTP以及OLAP场景提供一站式解决方案。特性：  兼容MySQL：无需修改代码直接从MySQL迁移到TiDB 支持水平无限扩展：增加节点即可实现扩展 强一致性：标准ACID事务">
 <meta name="twitter:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fs0dqkqnhlj20ge0c0mxu.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Glitter&#39;s Blog" type="application/atom+xml">
@@ -189,10 +189,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <blockquote>
-<p><a href="https://pingcap.com/docs-cn/" target="_blank" rel="noopener">https://pingcap.com/docs-cn/</a><br><a href="https://github.com/pingcap/tikv" target="_blank" rel="noopener">https://github.com/pingcap/tikv</a><br><a href="https://github.com/pingcap/tidb" target="_blank" rel="noopener">https://github.com/pingcap/tidb</a></p>
-</blockquote>
-<h1 id="TiDB简介与整体架构"><a href="#TiDB简介与整体架构" class="headerlink" title="TiDB简介与整体架构"></a>TiDB简介与整体架构</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>TiDB是一个开源分布式HTAP数据库（Hybrid Transactional and Analytical Processing），主要特点是结合了传统的RDBMS以及NoSQL。目标是为OLTP以及OLAP场景提供一站式解决方案。<br>特性：</p>
+        <h1 id="TiDB简介与整体架构"><a href="#TiDB简介与整体架构" class="headerlink" title="TiDB简介与整体架构"></a>TiDB简介与整体架构</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>TiDB是一个开源分布式HTAP数据库（Hybrid Transactional and Analytical Processing），主要特点是结合了传统的RDBMS以及NoSQL。目标是为OLTP以及OLAP场景提供一站式解决方案。<br>特性：</p>
 <ul>
 <li>兼容MySQL：无需修改代码直接从MySQL迁移到TiDB</li>
 <li>支持水平无限扩展：增加节点即可实现扩展</li>
@@ -395,6 +392,9 @@
 <li>Drainer：从Kafka中手机Binlog，按照TiDB中的提交顺序转化为指定数据库支持的SQl语句并进行同步</li>
 <li>Kafka &amp; ZooKeeper：存储Binlog数据并提供给Drainer<br>注：<em>Kafka是一个分布式发布订阅消息系统</em><h3 id="MyDumper-MyLoader"><a href="#MyDumper-MyLoader" class="headerlink" title="MyDumper/MyLoader"></a>MyDumper/MyLoader</h3>并行地备份或者恢复</li>
 </ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><blockquote>
+<p><a href="https://pingcap.com/docs-cn/" target="_blank" rel="noopener">https://pingcap.com/docs-cn/</a><br><a href="https://github.com/pingcap/tikv" target="_blank" rel="noopener">https://github.com/pingcap/tikv</a><br><a href="https://github.com/pingcap/tidb" target="_blank" rel="noopener">https://github.com/pingcap/tidb</a></p>
+</blockquote>
 
       
 
