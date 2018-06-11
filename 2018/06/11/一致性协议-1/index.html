@@ -6,18 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Glitter&#39;s Blog</title>
+  <title>一致性协议(1) | Glitter&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="用于本人不定期更新一些杂七杂八的东西">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Glitter&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/page/2/index.html">
+  <meta name="description" content="一致性协议(1)两阶段提交协议（Two-Phrase Commit, 2PC）作用：实现分布式事务的原子性操作，也可用于实现数据的强一致性，但是因为一些缺点一般很少这么用，更多的是用于保证数据更新的原子性手段.">
+<meta name="keywords" content="Consistency,2PC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一致性协议(1)">
+<meta property="og:url" content="http://yoursite.com/2018/06/11/一致性协议-1/index.html">
 <meta property="og:site_name" content="Glitter&#39;s Blog">
-<meta property="og:description" content="用于本人不定期更新一些杂七杂八的东西">
+<meta property="og:description" content="一致性协议(1)两阶段提交协议（Two-Phrase Commit, 2PC）作用：实现分布式事务的原子性操作，也可用于实现数据的强一致性，但是因为一些缺点一般很少这么用，更多的是用于保证数据更新的原子性手段.">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fs716cy169j20vy0gm74y.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fs716d4371j20w60gs3yz.jpg">
+<meta property="og:updated_time" content="2018-06-11T09:13:31.201Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Glitter&#39;s Blog">
-<meta name="twitter:description" content="用于本人不定期更新一些杂七杂八的东西">
+<meta name="twitter:title" content="一致性协议(1)">
+<meta name="twitter:description" content="一致性协议(1)两阶段提交协议（Two-Phrase Commit, 2PC）作用：实现分布式事务的原子性操作，也可用于实现数据的强一致性，但是因为一些缺点一般很少这么用，更多的是用于保证数据更新的原子性手段.">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fs716cy169j20vy0gm74y.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Glitter&#39;s Blog" type="application/atom+xml">
   
@@ -157,29 +162,50 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-tags-paper" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-一致性协议-1" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/04/28/tags-paper/">tags paper</a>
+    <h1 class="article-title" itemprop="name">
+      一致性协议(1)
     </h1>
   
 
         
-        <a href="/2018/04/28/tags-paper/" class="archive-article-date">
-  	<time datetime="2018-04-28T07:06:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-28</time>
+        <a href="/2018/06/11/一致性协议-1/" class="archive-article-date">
+  	<time datetime="2018-06-11T09:11:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-11</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>学习中，测试文本</p>
+        <h1 id="一致性协议-1"><a href="#一致性协议-1" class="headerlink" title="一致性协议(1)"></a>一致性协议(1)</h1><h2 id="两阶段提交协议（Two-Phrase-Commit-2PC）"><a href="#两阶段提交协议（Two-Phrase-Commit-2PC）" class="headerlink" title="两阶段提交协议（Two-Phrase Commit, 2PC）"></a>两阶段提交协议（Two-Phrase Commit, 2PC）</h2><p>作用：实现分布式事务的原子性操作，也可用于实现数据的强一致性，但是因为一些缺点一般很少这么用，更多的是用于保证数据更新的原子性手段.<br><a id="more"></a></p>
+<h3 id="两类实体"><a href="#两类实体" class="headerlink" title="两类实体"></a>两类实体</h3><ul>
+<li>协调者(Coordinator)：管理协调</li>
+<li>参与者(Participants)</li>
+</ul>
+<h3 id="两个阶段"><a href="#两个阶段" class="headerlink" title="两个阶段"></a>两个阶段</h3><ul>
+<li>表决阶段(Voting)：<br>协调者：向所有的参与者发送VOTE_REQUEST信息<br>参与者：接收VOTE_REQUEST信息，返回VOTE_COMMIT告知准备好提交，或者返回VOTE_ABORT告知无法提交</li>
+<li>提交阶段(Commit)：<br>协调者：收集表决信息，如果所有的参与者都能够提交，则向所有参与者发送提交信息GLOBAL_ABORT；如果有任意一个不能提交，则发送GLOBAL_ABORT取消本次事务。<br>参与者：接收GLOBAL_COMMIT提交或者接收GLOBAL_ABORT取消</li>
+</ul>
+<h3 id="有限状态机"><a href="#有限状态机" class="headerlink" title="有限状态机"></a>有限状态机</h3><p><img src="https://ws1.sinaimg.cn/large/8c185877gy1fs716cy169j20vy0gm74y.jpg" alt=""><br>发生阻塞的情况：</p>
+<ul>
+<li>协调者等待所有参与者的信息</li>
+<li>参与者等待协调者的commit请求</li>
+<li>参与者等待协调者的commit决策</li>
+</ul>
+<h3 id="两种解决阻塞的机制"><a href="#两种解决阻塞的机制" class="headerlink" title="两种解决阻塞的机制"></a>两种解决阻塞的机制</h3><ul>
+<li>超时机制：请求等待阶段引入超时判断，当等待请求超过一段时间没有回应时自动abort。如协调者等待所有参与者的回应或者参与者等待协调者的commit请求。</li>
+<li><p>参与者互询：<br>  场景：参与者进入Ready阶段，但是等待协调者的决策<br>  描述：参与者P与参与者Q，P未收到协调者的决策信息，P询问参与者Q，则根据Q的状态，可以大致决定P的状态：<br>  1.COMMIT，协调者已经发送了GLOBAL_COMMIT，则P也commit；<br>  2.2.ABORT，协调者发送了GLOBAL_ABORT，则P也abort；<br>  3.3.INIT，协调者仍处理表决阶段，Q超时，abort更为安全；<br>  4.4.READY，Q也同样在等，<strong>阻塞</strong></p>
+<h3 id="2PC的优化——3PC"><a href="#2PC的优化——3PC" class="headerlink" title="2PC的优化——3PC"></a>2PC的优化——3PC</h3><p>优化点：引入pre-commit阶段，消除可以直接转换到COMMIT以及ABORT的单独状态（协调者的WAIT以及参与者的READY），消除做最后决定并可以转到COMMIT以及ABORT的状态（协调者的WAIT以及参与者的READY）<br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fs716d4371j20w60gs3yz.jpg" alt=""></p>
+<blockquote>
+<p>《大数据日知录》——大数据基础理论——数据复制与一致性</p>
+</blockquote>
+</li>
+</ul>
 
       
 
@@ -193,94 +219,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">test</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Consistency</a>
         		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
+      		 
         		<li class="article-tag-list-item">
-        			<a href="/categories/hexo//" class="article-tag-list-link color5">hexo</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/04/28/tags-paper/">阅读全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-BeeOND文档翻译" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/04/28/BeeOND文档翻译/">BeeOND文档翻译</a>
-    </h1>
-  
-
-        
-        <a href="/2018/04/28/BeeOND文档翻译/" class="archive-article-date">
-  	<time datetime="2018-04-28T03:15:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-28</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="BeeOND：BeeGFS-On-Demand"><a href="#BeeOND：BeeGFS-On-Demand" class="headerlink" title="BeeOND：BeeGFS On Demand"></a>BeeOND：BeeGFS On Demand</h1><p>现在，集群的计算节点通常配备有内部的flash设备来存储操作系统并为应用提供临时的数据存储。但是使用临时的数据存储常常对于分布式的应用来说并不方便或者说并不实用，因为它们往往需要访问在不同节点上的共享的数据，这就导致SSD的高带宽以及IOPS被浪费。<br><img src="http://p8701ip7e.bkt.clouddn.com/beeond.png" alt="BeeOND结构示意图"><br>
-        
-          <a class="article-more-a" href="/2018/04/28/BeeOND文档翻译/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">BeeOND</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">2PC</a>
         		</li>
       		
 		</ul>
@@ -300,16 +243,84 @@
 
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/04/28/BeeOND文档翻译/">阅读全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/06/11/一致性协议-1/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2018/06/11/一致性协议-2/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          一致性协议(2)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/06/05/TiDB学习/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">TiDB学习</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -329,88 +340,14 @@
 
 
 
-
-  
-    <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/04/28/hello-world/">Hello World</a>
-    </h1>
-  
-
-        
-        <a href="/2018/04/28/hello-world/" class="archive-article-date">
-  	<time datetime="2018-04-28T02:58:15.995Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-28</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.<br>
-        
-          <a class="article-more-a" href="/2018/04/28/hello-world/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Other//" class="article-tag-list-link color1">Other</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/04/28/hello-world/">阅读全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
   
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
-    </nav>
+  
+
+  
+
+  
+
   
 
 
@@ -433,8 +370,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
