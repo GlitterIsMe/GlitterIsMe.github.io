@@ -8,21 +8,21 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>Rust-1 | Glitter&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Glitter的Rust之旅（1）没错，我又要开一个新坑，你猜我能坚持多久？因为一些机缘巧合（大概就是前一个项目还没着落，导师又刚好遇到另一家做开源存储系统的公司（大名鼎鼎的PingCAP），正好让我去了解一下这个公司的开源项目（大名鼎鼎的PingCAP），然后了解到这是Rust写的。。。emmmm。。。所以为了能够更好地了解设计，我觉得还是学一下Rust比较好（听说Rust这门语言还不错），虽然">
+  <meta name="description" content="Glitter的Rust之旅（1）没错，我又要开一个新坑，你猜我能坚持多久？因为一些机缘巧合（大概就是前一个项目还没着落，导师又刚好遇到另一家做开源存储系统的公司（大名鼎鼎的PingCAP），正好让我去了解一下这个公司的开源项目（大名鼎鼎的TiKV），然后了解到这是Rust写的。。。emmmm。。。所以为了能够更好地了解设计，我觉得还是学一下Rust比较好（听说Rust这门语言还不错），虽然后面不">
 <meta name="keywords" content="Rust">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Rust-1">
 <meta property="og:url" content="http://yoursite.com/2018/06/11/Rust-1/index.html">
 <meta property="og:site_name" content="Glitter&#39;s Blog">
-<meta property="og:description" content="Glitter的Rust之旅（1）没错，我又要开一个新坑，你猜我能坚持多久？因为一些机缘巧合（大概就是前一个项目还没着落，导师又刚好遇到另一家做开源存储系统的公司（大名鼎鼎的PingCAP），正好让我去了解一下这个公司的开源项目（大名鼎鼎的PingCAP），然后了解到这是Rust写的。。。emmmm。。。所以为了能够更好地了解设计，我觉得还是学一下Rust比较好（听说Rust这门语言还不错），虽然">
+<meta property="og:description" content="Glitter的Rust之旅（1）没错，我又要开一个新坑，你猜我能坚持多久？因为一些机缘巧合（大概就是前一个项目还没着落，导师又刚好遇到另一家做开源存储系统的公司（大名鼎鼎的PingCAP），正好让我去了解一下这个公司的开源项目（大名鼎鼎的TiKV），然后了解到这是Rust写的。。。emmmm。。。所以为了能够更好地了解设计，我觉得还是学一下Rust比较好（听说Rust这门语言还不错），虽然后面不">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fs7ihlbpo3j2037039web.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fs7hmko0yjj20nw0psju4.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fs7i3ptq9fj201r01smx6.jpg">
-<meta property="og:updated_time" content="2018-06-11T12:33:57.613Z">
+<meta property="og:updated_time" content="2018-06-12T06:14:38.734Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Rust-1">
-<meta name="twitter:description" content="Glitter的Rust之旅（1）没错，我又要开一个新坑，你猜我能坚持多久？因为一些机缘巧合（大概就是前一个项目还没着落，导师又刚好遇到另一家做开源存储系统的公司（大名鼎鼎的PingCAP），正好让我去了解一下这个公司的开源项目（大名鼎鼎的PingCAP），然后了解到这是Rust写的。。。emmmm。。。所以为了能够更好地了解设计，我觉得还是学一下Rust比较好（听说Rust这门语言还不错），虽然">
+<meta name="twitter:description" content="Glitter的Rust之旅（1）没错，我又要开一个新坑，你猜我能坚持多久？因为一些机缘巧合（大概就是前一个项目还没着落，导师又刚好遇到另一家做开源存储系统的公司（大名鼎鼎的PingCAP），正好让我去了解一下这个公司的开源项目（大名鼎鼎的TiKV），然后了解到这是Rust写的。。。emmmm。。。所以为了能够更好地了解设计，我觉得还是学一下Rust比较好（听说Rust这门语言还不错），虽然后面不">
 <meta name="twitter:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fs7ihlbpo3j2037039web.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Glitter&#39;s Blog" type="application/atom+xml">
@@ -183,7 +183,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="Glitter的Rust之旅（1）"><a href="#Glitter的Rust之旅（1）" class="headerlink" title="Glitter的Rust之旅（1）"></a>Glitter的Rust之旅（1）</h1><h2 id="没错，我又要开一个新坑，你猜我能坚持多久？"><a href="#没错，我又要开一个新坑，你猜我能坚持多久？" class="headerlink" title="没错，我又要开一个新坑，你猜我能坚持多久？"></a>没错，我又要开一个新坑，你猜我能坚持多久？</h2><p>因为一些机缘巧合（大概就是前一个项目还没着落，导师又刚好遇到另一家做开源存储系统的公司（大名鼎鼎的PingCAP），正好让我去了解一下这个公司的开源项目（大名鼎鼎的PingCAP），然后了解到这是Rust写的。。。emmmm。。。所以为了能够更好地了解设计，我觉得还是学一下Rust比较好（听说Rust这门语言还不错），虽然后面不一定有项目而且也不一定能用的上，反正先学一点嘛，技多不压身（认真脸））<br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fs7ihlbpo3j2037039web.jpg" alt=""></p>
+        <h1 id="Glitter的Rust之旅（1）"><a href="#Glitter的Rust之旅（1）" class="headerlink" title="Glitter的Rust之旅（1）"></a>Glitter的Rust之旅（1）</h1><h2 id="没错，我又要开一个新坑，你猜我能坚持多久？"><a href="#没错，我又要开一个新坑，你猜我能坚持多久？" class="headerlink" title="没错，我又要开一个新坑，你猜我能坚持多久？"></a>没错，我又要开一个新坑，你猜我能坚持多久？</h2><p>因为一些机缘巧合（大概就是前一个项目还没着落，导师又刚好遇到另一家做开源存储系统的公司（大名鼎鼎的PingCAP），正好让我去了解一下这个公司的开源项目（大名鼎鼎的TiKV），然后了解到这是Rust写的。。。emmmm。。。所以为了能够更好地了解设计，我觉得还是学一下Rust比较好（听说Rust这门语言还不错），虽然后面不一定有项目而且也不一定能用的上，反正先学一点嘛，技多不压身（认真脸））<br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fs7ihlbpo3j2037039web.jpg" alt=""></p>
 <a id="more"></a>
 <h2 id="Rust安装"><a href="#Rust安装" class="headerlink" title="Rust安装"></a>Rust安装</h2><p><strong>我！还没搞定啊</strong>（丢人！）<br>总之跟着官网的步骤走就应该没问题（我怎么就遇到问题了？）<br>首先打开官网下载exe<br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fs7hmko0yjj20nw0psju4.jpg" alt=""><br><em>注意到下面的windows安装注意事项，这里踩了个坑，所以我现在正在下载VS2017</em><br>装好之后的步骤下次再说吧，本来准备用Atom来写的，但是暂时先不管了，因为，我还没装好</p>
 <h2 id="Rust语法语义"><a href="#Rust语法语义" class="headerlink" title="Rust语法语义"></a>Rust语法语义</h2><h3 id="Rust的变量绑定"><a href="#Rust的变量绑定" class="headerlink" title="Rust的变量绑定"></a>Rust的变量绑定</h3><p>对于每一门语言的教程，第一章一定是讲的变量，你的C/C++教科书第一章一定是从<code>int i = 5</code>（你说i=10那我也没办法）开始的。燃鹅，Rust的画风好像有点不一样（也有可能是我见识浅薄了，吃了文化的亏），Rust的第一章，叫<strong>变量绑定</strong>。<br>变量绑定的画风是这样的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let x = 5;</span><br></pre></td></tr></table></figure></p>
@@ -287,6 +287,15 @@
 
   
 <nav id="article-nav">
+  
+    <a href="/2018/06/12/Rust-2/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Rust-2
+        
+      </div>
+    </a>
   
   
     <a href="/2018/06/11/一致性协议-2/" id="article-nav-older" class="article-nav-link-wrap">
@@ -412,11 +421,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">BeeOND</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">BeeGFS</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">BeeOND</a>
+                <a href="javascript:void(0)" class="js-tag color1">DarkSouls3</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -424,7 +437,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">DarkSouls3</a>
+                <a href="javascript:void(0)" class="js-tag color5">test</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -436,19 +449,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">2PC</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Paxos</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">test</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Web</a>
+                <a href="javascript:void(0)" class="js-tag color4">2PC</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -457,6 +462,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">TiKV</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Web</a>
               </li>
             
             <div class="clearfix"></div>
