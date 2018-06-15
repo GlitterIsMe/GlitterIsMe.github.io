@@ -6,18 +6,24 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Tag: BeeOND | Glitter&#39;s Blog</title>
+  <title>Rust-3 | Glitter&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="用于本人不定期更新一些杂七杂八的东西">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Glitter&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/tags/BeeOND/index.html">
+  <meta name="description" content="Glitter的Rust之旅（3）函数与类型，熟悉与陌生">
+<meta name="keywords" content="Rust">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rust-3">
+<meta property="og:url" content="http://yoursite.com/2018/06/15/Rust-3/index.html">
 <meta property="og:site_name" content="Glitter&#39;s Blog">
-<meta property="og:description" content="用于本人不定期更新一些杂七杂八的东西">
+<meta property="og:description" content="Glitter的Rust之旅（3）函数与类型，熟悉与陌生">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fsbwd7afp1j20de082wef.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fsbwuidgpaj20gd0b6wf4.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fsbwye4jxlj20h704f0sm.jpg">
+<meta property="og:updated_time" content="2018-06-15T08:46:36.007Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Glitter&#39;s Blog">
-<meta name="twitter:description" content="用于本人不定期更新一些杂七杂八的东西">
+<meta name="twitter:title" content="Rust-3">
+<meta name="twitter:description" content="Glitter的Rust之旅（3）函数与类型，熟悉与陌生">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fsbwd7afp1j20de082wef.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Glitter&#39;s Blog" type="application/atom+xml">
   
@@ -157,48 +163,107 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-Rust-3" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/05/02/BeeOND安装与使用/" class="archive-article-date">
-  	<time datetime="2018-05-02T11:37:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-02</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/05/02/BeeOND安装与使用/">BeeOND安装与使用</a>
+    <h1 class="article-title" itemprop="name">
+      Rust-3
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2018/06/15/Rust-3/" class="archive-article-date">
+  	<time datetime="2018-06-15T08:45:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-15</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Glitter的Rust之旅（3）"><a href="#Glitter的Rust之旅（3）" class="headerlink" title="Glitter的Rust之旅（3）"></a>Glitter的Rust之旅（3）</h1><h2 id="函数与类型，熟悉与陌生"><a href="#函数与类型，熟悉与陌生" class="headerlink" title="函数与类型，熟悉与陌生"></a>函数与类型，熟悉与陌生</h2><a id="more"></a>
+<h3 id="Rust的函数"><a href="#Rust的函数" class="headerlink" title="Rust的函数"></a>Rust的函数</h3><p>首先是函数的基本形式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fn function( )&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>乍一看和C/C++有点像，不过多了个关键字<strong>fn</strong>，Rust里面每个函数都会在最前面加上fn，来表示这是个函数。<br>那如果要给这个函数传入几个参数呢？形式也和我们认识的函数类似，在括号里面：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fn add(x: i32, y: i32)&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>emmm，除了参数都在括号里好像也没别的共同点了。这里需要注意的是，声明一个绑定的时候我们可以不声明一个变量的类型，但是函数的参数就不行，<strong>必须声明每个参数的类型</strong>，声明的方式和<code>let</code>类似，都是变量后面加上冒号加上数据类型。<br>然后我们如果我们需要函数返回计算结果，就需要声明返回值，Rust声明返回值的位置就不是像C/C++那样写在函数前面，而是像这样：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fn add(x: i32, y: i32) -&gt; i32&#123;</span><br><span class="line">	x + y</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>也就是在参数的括号后面，函数体的{}前面，加上-&gt;并指明返回值类型<br><strong>注意了， 注意了，这里有个重要的坑点，敲黑板</strong><br>这个函数里面返回x+y但是x+y后面就没有分号，这个是错了吗？不这个才是对的，如果你加上分号：<br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fsbwd7afp1j20de082wef.jpg" alt=""><br>看到没，他说他想要一个i32返回值，但是你给了他一个()，what？这就涉及到一个Rust的重要特点：基于表达式</p>
+<h4 id="表达式与语句"><a href="#表达式与语句" class="headerlink" title="表达式与语句"></a>表达式与语句</h4><p>Rust是一门基于表达式的语言，他只有两种语句，而其他一切都是表达式，这里面主要的区别就在于<strong>表达式返回一个值，但是语句没有</strong>。Rust中语句只有两种：<strong>声明语句</strong>和<strong>表达式语句</strong>。<br>什么是声明语句？每个<code>let</code>绑定就是一个声明语句，其他语言里面可能支持这样的连等赋值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x = y = 5;</span><br></pre></td></tr></table></figure></p>
+<p>编译器会认为首先<code>y=5</code>是一个表达式，然后他的值是5，然后再赋值给x。但是Rust里面就不能这样，<code>let y = 5</code>不是一个表达式，这样<code>let x = (let y = 5)</code>就是错误的。<br>Rust里面对一个已经绑定过的变量进行赋值也是一个表达式，比如<code>y = 5</code>这就是一个表达式，但是他的返回值不是5，而是很奇怪的为<code>( )</code>，所以，如果你这样用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let mut y = 1;</span><br><span class="line">let x = (y = 5);</span><br></pre></td></tr></table></figure></p>
+<p>就把x给绑定了一个空的元组<code>()</code><br>Rust的第二种语句是表达式语句，也就是把其他所有的表达式都变成语句，Rust希望语句后面是跟着语句，所以需要用分号来把表达式进行分割，分号则会出现在几乎每一行（教程里这么说），例外就是返回值的情况，如果返回值加上了分号，就会返回一个空的元组<code>()</code>.</p>
+<h4 id="提早返回"><a href="#提早返回" class="headerlink" title="提早返回"></a>提早返回</h4><p>如果我们在一个复杂的函数里面有多个返回点，仅通过表达式就不能实现在需要的地方进行返回了，那怎么办？<br>用<code>return</code>呗：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">fn foo(x: i32) -&gt; i32&#123;</span><br><span class="line">	return x;</span><br><span class="line">    x + 1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>return用法就跟我们熟悉的return一样，那么为什么我们不就使用return？！人家说这样是一种糟糕的风格，ok，you said the calculation。<br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fsbwuidgpaj20gd0b6wf4.jpg" alt=""></p>
+<h4 id="发散函数"><a href="#发散函数" class="headerlink" title="发散函数"></a>发散函数</h4><p>emmmm，Rust还定义了一种 发散函数，函数并不返回，形式像这样：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fn diverges() -&gt; !&#123;</span><br><span class="line">	panic!(&quot;This fucntion never returns !&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>发散函数就是返回值变成了<code>!</code>，这个函数运行到panic!()就会推出然后报告里面的信息，但是我也不知道发散函数有啥用？<br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fsbwye4jxlj20h704f0sm.jpg" alt=""></p>
+<h3 id="原生类型"><a href="#原生类型" class="headerlink" title="原生类型"></a>原生类型</h3><p>这一部分就主要介绍Rust里面的各种数据类型，就像C/C++里面的char、int、数组之类的这种。<br>主要类型就先列个表格直观一点：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bool</td>
+<td>值为true或者false，常用于if</td>
+</tr>
+<tr>
+<td>char</td>
+<td>单独的Unicode字符，通过单引号<code>&#39;</code>标识，如<code>&#39;x&#39;</code>，大小为<strong>4byte</strong></td>
+</tr>
+<tr>
+<td>数字类型</td>
+<td>i为有符号，u为无符号，后面跟8、16、32、64表长度，也可以用isize/usize表可变大小，或者用f标识浮点类型</td>
+</tr>
+<tr>
+<td>数组</td>
+<td>下面详细讲</td>
+</tr>
+<tr>
+<td>切片(Slice)</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>元组(Tuple)</td>
+<td>同上</td>
+</tr>
+</tbody>
+</table>
+<h4 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h4><p>Rust的数组通过<code>[ ]</code>来声明，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let a = [1, 2, 3];</span><br><span class="line">let mut b = [1, 2, 3];</span><br></pre></td></tr></table></figure></p>
+<p>这里说，数组类型为[T; N]，这个跟后面的泛型有关系，那么就后面再说吧，T肯定就是类型，N就是数组大小，比如上面的a就是一个[i32, 3]的数组。<br>当然如果我们要声明一个大小为100的数组，不可能说我们把100个值都列出来，那么就是另一种声明方式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let a2 = [20; 100];</span><br></pre></td></tr></table></figure></p>
+<p>这样就声明了一个长度为100的数组，还把全部值都初始化成了20，怎么跟python这么像？<br>对于一个数组a，可以用<code>a.len()</code>来获取数组长度，恩，这很OOP。<br>数据访问同样是[] + 下标，下标同样是从0开始，这一点都是很熟的。</p>
+<h4 id="切片Slice"><a href="#切片Slice" class="headerlink" title="切片Slice"></a>切片Slice</h4><p>这个概念也很像python，实际是一个数组的引用，作用是能够安全地访问数组的一部分并且不用进行拷贝，Slice有预定义的长度，长度是可变的也可以是固定的。<br>切片的声明是这样的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">let a = [0, 1, 2, 3, 4, 5]//[i32; 6]的数组</span><br><span class="line">let slice1 = &amp;a[..];</span><br><span class="line">let slice2 = &amp;a[1..4];</span><br></pre></td></tr></table></figure></p>
+<p>这里声明了两个切片slice1和slice2，slice1表示包含了数组a的全部元组，而slice2表示包含a里面从a[1]到a[3]的元素，也就是说&amp;a[x..y]是从a[x]到a[y-1]的元素</p>
+<h4 id="str"><a href="#str" class="headerlink" title="str"></a>str</h4><p>str是字符串类型，类型为&amp;str，长度不定</p>
+<h4 id="元组Tuple"><a href="#元组Tuple" class="headerlink" title="元组Tuple"></a>元组Tuple</h4><p>元组是一个<strong>固定大小的有序列表</strong>，这个也和Python很像！比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let x = (1, &quot;hello&quot;);</span><br></pre></td></tr></table></figure></p>
+<p>或者:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let x: (i32, &amp;str) = (1, &quot;hello&quot;)</span><br></pre></td></tr></table></figure></p>
+<p>元组可以直接赋值给另一个绑定，也可以有另一个奇妙的用法：<strong>解构</strong>let<br>大概像这样：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let (at, bt, ct) = (&quot;str&quot;, 1, &apos;x&apos;);</span><br></pre></td></tr></table></figure></p>
+<p>这里就是通过let将一个绑定解开变成了三个绑定，很厉害啊<br>如果要访问元组，这里需要注意不是通过<code>[]</code>而是<code>.</code>，也就是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">let t = (1, 2, 3);</span><br><span class="line">let t1 = t.0;</span><br><span class="line">let t2 = t.1;</span><br><span class="line">let t3 = t.2;</span><br></pre></td></tr></table></figure></p>
+<p>不过一样的是，索引也是从0开始（感觉像C++的pair？）</p>
+<h4 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h4><p>函数也是一个类型，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">fn add(x: i32, y:i32) -&gt; i32&#123;</span><br><span class="line">	x+y</span><br><span class="line">&#125;</span><br><span class="line">let x: fn(i32, i32)-&gt;i32 = add;</span><br></pre></td></tr></table></figure></p>
+<p>这里fn(i32, i32)-&gt;i32就是add函数的类型，恩和函数指针一样，就不多废话了</p>
+<h3 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h3><p>最后再插一个小点，就是Rust的注释，这个和一般的静态语言基本一致（PY这种脚本语言一般用#就不说了），也是用<code>//</code>来表示行注释，而文档注释是通过<code>///</code>或者<code>//!</code>来实现。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">BeeOND</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Rust</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -211,66 +276,104 @@
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/06/15/Rust-3/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/04/28/BeeOND文档翻译/" class="archive-article-date">
-  	<time datetime="2018-04-28T03:15:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-28</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2018/06/12/Rust-2/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Rust-2</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/04/28/BeeOND文档翻译/">BeeOND文档翻译</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">BeeOND</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Tech//" class="article-tag-list-link color5">Tech</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+
   
   
-    </div></section>
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -293,9 +396,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
