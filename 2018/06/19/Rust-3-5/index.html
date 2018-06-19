@@ -6,24 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Rust-1 | Glitter&#39;s Blog</title>
+  <title>Rust-3.5 | Glitter&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Glitter的Rust之旅（1）没错，我又要开一个新坑，你猜我能坚持多久？因为一些机缘巧合（大概就是前一个项目还没着落，导师又刚好遇到另一家做开源存储系统的公司（大名鼎鼎的PingCAP），正好让我去了解一下这个公司的开源项目（大名鼎鼎的TiKV），然后了解到这是Rust写的。。。emmmm。。。所以为了能够更好地了解设计，我觉得还是学一下Rust比较好（听说Rust这门语言还不错），虽然后面不">
+  <meta name="description" content="Glitter的Rust之旅（3.5）单独划出来是因为上一章有点长了重新去Rust官网找教程，发现找到的教程好像跟之前我看的不太一样，然后仔细看了下发现我看的是1.0版本，现在已经更新2.0版本了，还好之前摸鱼了（跑这一章介绍Rust的控制流，在2.0教程中与前面两章的内容一起归于通用编程概念里面，所以我才写个3.5章（摊手">
 <meta name="keywords" content="Rust">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Rust-1">
-<meta property="og:url" content="http://yoursite.com/2018/06/11/Rust-1/index.html">
+<meta property="og:title" content="Rust-3.5">
+<meta property="og:url" content="http://yoursite.com/2018/06/19/Rust-3-5/index.html">
 <meta property="og:site_name" content="Glitter&#39;s Blog">
-<meta property="og:description" content="Glitter的Rust之旅（1）没错，我又要开一个新坑，你猜我能坚持多久？因为一些机缘巧合（大概就是前一个项目还没着落，导师又刚好遇到另一家做开源存储系统的公司（大名鼎鼎的PingCAP），正好让我去了解一下这个公司的开源项目（大名鼎鼎的TiKV），然后了解到这是Rust写的。。。emmmm。。。所以为了能够更好地了解设计，我觉得还是学一下Rust比较好（听说Rust这门语言还不错），虽然后面不">
+<meta property="og:description" content="Glitter的Rust之旅（3.5）单独划出来是因为上一章有点长了重新去Rust官网找教程，发现找到的教程好像跟之前我看的不太一样，然后仔细看了下发现我看的是1.0版本，现在已经更新2.0版本了，还好之前摸鱼了（跑这一章介绍Rust的控制流，在2.0教程中与前面两章的内容一起归于通用编程概念里面，所以我才写个3.5章（摊手">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fs7ihlbpo3j2037039web.jpg">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fs7hmko0yjj20nw0psju4.jpg">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fs7i3ptq9fj201r01smx6.jpg">
-<meta property="og:updated_time" content="2018-06-12T06:14:38.734Z">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fsgqca0jn0j20b507aq2p.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fsgqbqfbq5j201y023dfx.jpg">
+<meta property="og:updated_time" content="2018-06-19T12:23:04.833Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Rust-1">
-<meta name="twitter:description" content="Glitter的Rust之旅（1）没错，我又要开一个新坑，你猜我能坚持多久？因为一些机缘巧合（大概就是前一个项目还没着落，导师又刚好遇到另一家做开源存储系统的公司（大名鼎鼎的PingCAP），正好让我去了解一下这个公司的开源项目（大名鼎鼎的TiKV），然后了解到这是Rust写的。。。emmmm。。。所以为了能够更好地了解设计，我觉得还是学一下Rust比较好（听说Rust这门语言还不错），虽然后面不">
-<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fs7ihlbpo3j2037039web.jpg">
+<meta name="twitter:title" content="Rust-3.5">
+<meta name="twitter:description" content="Glitter的Rust之旅（3.5）单独划出来是因为上一章有点长了重新去Rust官网找教程，发现找到的教程好像跟之前我看的不太一样，然后仔细看了下发现我看的是1.0版本，现在已经更新2.0版本了，还好之前摸鱼了（跑这一章介绍Rust的控制流，在2.0教程中与前面两章的内容一起归于通用编程概念里面，所以我才写个3.5章（摊手">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fsgqca0jn0j20b507aq2p.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Glitter&#39;s Blog" type="application/atom+xml">
   
@@ -163,37 +162,39 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Rust-1" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-Rust-3-5" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      Rust-1
+      Rust-3.5
     </h1>
   
 
         
-        <a href="/2018/06/11/Rust-1/" class="archive-article-date">
-  	<time datetime="2018-06-11T12:33:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-11</time>
+        <a href="/2018/06/19/Rust-3-5/" class="archive-article-date">
+  	<time datetime="2018-06-19T12:21:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-19</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="Glitter的Rust之旅（1）"><a href="#Glitter的Rust之旅（1）" class="headerlink" title="Glitter的Rust之旅（1）"></a>Glitter的Rust之旅（1）</h1><h2 id="没错，我又要开一个新坑，你猜我能坚持多久？"><a href="#没错，我又要开一个新坑，你猜我能坚持多久？" class="headerlink" title="没错，我又要开一个新坑，你猜我能坚持多久？"></a>没错，我又要开一个新坑，你猜我能坚持多久？</h2><p>因为一些机缘巧合（大概就是前一个项目还没着落，导师又刚好遇到另一家做开源存储系统的公司（大名鼎鼎的PingCAP），正好让我去了解一下这个公司的开源项目（大名鼎鼎的TiKV），然后了解到这是Rust写的。。。emmmm。。。所以为了能够更好地了解设计，我觉得还是学一下Rust比较好（听说Rust这门语言还不错），虽然后面不一定有项目而且也不一定能用的上，反正先学一点嘛，技多不压身（认真脸））<br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fs7ihlbpo3j2037039web.jpg" alt=""></p>
+        <h1 id="Glitter的Rust之旅（3-5）"><a href="#Glitter的Rust之旅（3-5）" class="headerlink" title="Glitter的Rust之旅（3.5）"></a>Glitter的Rust之旅（3.5）</h1><h2 id="单独划出来是因为上一章有点长了"><a href="#单独划出来是因为上一章有点长了" class="headerlink" title="单独划出来是因为上一章有点长了"></a>单独划出来是因为上一章有点长了</h2><p>重新去Rust官网找教程，发现找到的教程好像跟之前我看的不太一样，然后仔细看了下发现我看的是1.0版本，现在已经更新2.0版本了，还好之前摸鱼了（跑<br>这一章介绍Rust的控制流，在2.0教程中与前面两章的内容一起归于通用编程概念里面，所以我才写个3.5章（摊手</p>
 <a id="more"></a>
-<h2 id="Rust安装"><a href="#Rust安装" class="headerlink" title="Rust安装"></a>Rust安装</h2><p><strong>我！还没搞定啊</strong>（丢人！）<br>总之跟着官网的步骤走就应该没问题（我怎么就遇到问题了？）<br>首先打开官网下载exe<br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fs7hmko0yjj20nw0psju4.jpg" alt=""><br><em>注意到下面的windows安装注意事项，这里踩了个坑，所以我现在正在下载VS2017</em><br>装好之后的步骤下次再说吧，本来准备用Atom来写的，但是暂时先不管了，因为，我还没装好</p>
-<h2 id="Rust语法语义"><a href="#Rust语法语义" class="headerlink" title="Rust语法语义"></a>Rust语法语义</h2><h3 id="Rust的变量绑定"><a href="#Rust的变量绑定" class="headerlink" title="Rust的变量绑定"></a>Rust的变量绑定</h3><p>对于每一门语言的教程，第一章一定是讲的变量，你的C/C++教科书第一章一定是从<code>int i = 5</code>（你说i=10那我也没办法）开始的。燃鹅，Rust的画风好像有点不一样（也有可能是我见识浅薄了，吃了文化的亏），Rust的第一章，叫<strong>变量绑定</strong>。<br>变量绑定的画风是这样的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let x = 5;</span><br></pre></td></tr></table></figure></p>
-<p>而且注意到没，和<code>int i= 5</code>不一样的是，这里我们并没有告诉x，它的类型是啥，这在Rust中被叫做<strong>类型推断</strong>，也就是说他能自动识别x以及赋予其的值的类型，你就不需要明确地指出来了（对不起我第一次见这个，再次吃了文化的亏）。当然你要是实在想声明一个变量的类型，也可以做一个<strong>类型注解（Type annotations）</strong>，做法是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let x: i32 = 5;</span><br></pre></td></tr></table></figure></p>
-<p>这里的i32表示x是一个有符号32位整数，i表示有符号（u表示无符号），32表示32位。<br>又来了一个不一样的地方就是，你通过<code>let</code>声明的x的值，是不可变的，what？这么不走寻常路？接着Rust介绍了怎么声明一个可变的变量：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let mut y = 10;</span><br></pre></td></tr></table></figure></p>
-<p>OK，这样y就可以被随心所欲地进行赋值了。这样的规则和我们所接触到的C/C++是完全相反的，C/C++里默认声明的变量是可变的，而对于常量你需要显式地声明<code>const</code>，而Rust，一个新的变量绑定是默认不可变的，你需要显式地声明<code>mut</code>才能成为一个可变的绑定，这样你可能会问，Why？我哪知道，他说安全。<br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fs7i3ptq9fj201r01smx6.jpg" alt=""><br>好的我们继续，对于默认的一个绑定，由于它是不可变的，所以我们就必须为其进行<strong>初始化</strong>，比如如果你声明了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let x;</span><br></pre></td></tr></table></figure></p>
-<p>这个时候编译能通过，但是当你脑袋一抽，去访问x的值的时候，比如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let x;</span><br><span class="line">println!(&quot;x = &#123;&#125;&quot;, x);</span><br></pre></td></tr></table></figure></p>
-<p>就出问题了，哦没问题，因为你并不能通过编译(这里的{}类似于C/C++的printf中的%d的作用)<br>还有一个问题就是作用域的问题，和其它编程语言一样，Rust也有作用域的概念，也就是<strong>变量都对应了一个作用域，变量只能在其作用域内被访问</strong>，具体表现为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	let x = 5;</span><br><span class="line">    &#123;</span><br><span class="line">    	let y = 10;</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这里，y就不能在主函数内部被访问，因为y只属于他所在的那个程序块（{}内部），这一点跟其他编程语言是一致的。<br>然后还有一个问题，以前并没有注意到过，那就是隐藏，具体表现为<strong>同一作用域下后声明的绑定可以覆盖先声明的绑定</strong>，也就是这样的情况：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">let x = 5;</span><br><span class="line">...</span><br><span class="line">let mut x = 10;</span><br></pre></td></tr></table></figure></p>
-<p>这种情况Rust不会报重复定义的错，而是会将原来的x声明给覆盖，这造成的问题是，原来的x占用的空间仍然存在，而且你还访问不了（类似C++的没有释放内存的情况），所以还是需要注意避免这样的情况（不要let x写嗨了忘了前面用过x）</p>
+<h2 id="条件"><a href="#条件" class="headerlink" title="条件"></a>条件</h2><h3 id="if-else"><a href="#if-else" class="headerlink" title="if-else"></a>if-else</h3><p>if-else语句的用法的语法都跟C/C++差不多，不过这里的条件不需要加上括号，就像这样：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">fn main() &#123;</span><br><span class="line">    let num = 3;</span><br><span class="line">    if num &lt; 5&#123;</span><br><span class="line">        println!(&quot;&#123;&#125; &lt; 5&quot;, num);</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        println!(&quot;&#123;&#125; &gt;= 5&quot;, num);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>但是需要注意的是，<strong>Rust并不会隐式地进行类型转换</strong>，意思就是，if后面一定要是一个bool类型的值而不能是其他类型，如果是其他类型就会报错，这与其他语言会自动地进行转化是不一样的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">let num = 3;</span><br><span class="line">if num &#123;</span><br><span class="line">	//错误，num不是一个bool类型的值</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="let-if"><a href="#let-if" class="headerlink" title="let-if"></a>let-if</h3><p>这里Rust的let又开始显示出他很厉害的功能了，也就是let语句中使用if，总的来说就是根据if判断来进行let的绑定，听起来跟C/C++中的<code>? :</code>很像来着，用法是这样：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">fn main() &#123;</span><br><span class="line">    let x = 1;</span><br><span class="line">    let y = 2;</span><br><span class="line">    let z = if x &lt; y&#123;</span><br><span class="line">        -1//这里没分号</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        1</span><br><span class="line">    &#125;;//这里有分号</span><br><span class="line">    println!(&quot;z = &#123;&#125;&quot;, z);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>有三点需要注意的，一是if后大括号内表达式不要有分号，至于为什么请看前一章；二是if语句块<strong>最后一定要有分号</strong>，也就是let语句的分号，这个不能忘了，不然就错了啊；三是if与else语句块<strong>返回的类型一定要一样</strong>，这样做是为了能在编译的时候就确定z的类型，下面这样就会出错：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">let z = if x &lt; y&#123;</span><br><span class="line">       -1</span><br><span class="line">   &#125;else&#123;</span><br><span class="line">       &quot;error&quot;</span><br><span class="line">   &#125;;</span><br></pre></td></tr></table></figure></p>
+<h2 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h2><p>循环也不陌生，不过Rust提供了三种循环，loop、while和for，while和for都很熟悉，那么什么是loop呢，我之前也没见过呢~</p>
+<h3 id="loop"><a href="#loop" class="headerlink" title="loop"></a>loop</h3><p>当你使用<code>loop</code>的时候就是告诉编译器，这段代码你给我一直跑，直到你要求它停下来为止，怎么用呢，这样的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">fn main() &#123;</span><br><span class="line">    loop&#123;</span><br><span class="line">        println!(&quot;hahahahhahaha&quot; );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>简单的loop关键字加上后面你需要的循环的代码块就构成了loop语句，上面的代码运行之后你就可以让你的终端笑死<br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fsgqca0jn0j20b507aq2p.jpg" alt=""><br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fsgqbqfbq5j201y023dfx.jpg" alt=""><br>那怎么停下来呢，break啊（<del>不要停下来啊</del></p>
+<h3 id="while"><a href="#while" class="headerlink" title="while"></a>while</h3><p>while用法和平时认识的基本一样，就不细说了，同样condition不要加括号（while true不就是一个loop吗</p>
+<h3 id="for"><a href="#for" class="headerlink" title="for"></a>for</h3><p>for语法和我们最开始接触的C中的for不太一样，更接近于现在的一些脚本语言（python）或者先进的面向对象的语言（C++11），给人一种用于迭代的感觉。怎么用呢？例如我们要遍历一个数组中的所有元素，如果用while来做：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">fn main() &#123;</span><br><span class="line">    let x = [1,2,3,4,5];</span><br><span class="line">    let mut i = 0;</span><br><span class="line">    while i &lt; 5&#123;</span><br><span class="line">        println!(&quot; x[&#123;&#125;] = &#123;&#125;&quot;,i, x[i]);</span><br><span class="line">        i = i + 1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样写当然是可以<del>但开发者想打断你的腿</del>，但是执行的之后需要严格保证i不超过数组边界，一旦超过就会使得程序panic，但是如果我们不小心删掉了一个元素，又忘了改i值，那就GG了。并且运行时每次循环都要进行越界检查，拖慢了程序的运行速度，这个时候就该用for了：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">fn main() &#123;</span><br><span class="line">    let x = [1,2,3,4,5];</span><br><span class="line">    for num in x.iter()&#123;</span><br><span class="line">        println!(&quot;&#123;&#125;&quot;, num);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>所以大致的语法就是：<code>for var in ...</code>，var指代后面集合内的元素，通过这样的形式就能完美避免需要自己判断越界的情况，增强安全性。<br>如果需要循环计时，还可以用到<code>range</code>（和python很像），比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">fn main() &#123;</span><br><span class="line">    let x = [1,2,3,4,5];</span><br><span class="line">    for i in (1..10).rev()&#123;</span><br><span class="line">        println!(&quot;i = &#123;&#125;&quot;, i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
       
 
@@ -274,7 +275,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/06/11/Rust-1/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/06/19/Rust-3-5/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -288,18 +289,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2018/06/12/Rust-2/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          Rust-2
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/06/11/一致性协议-2/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">一致性协议(2)</div>
+    <a href="/2018/06/15/Rust-3/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Rust-3</div>
       <i class="icon-circle-right"></i>
     </a>
   
