@@ -6,24 +6,26 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Rust-1 | Glitter&#39;s Blog</title>
+  <title>Rust-4 | Glitter&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Glitter的Rust之旅（1）没错，我又要开一个新坑，你猜我能坚持多久？因为一些机缘巧合（大概就是前一个项目还没着落，导师又刚好遇到另一家做开源存储系统的公司（大名鼎鼎的PingCAP），正好让我去了解一下这个公司的开源项目（大名鼎鼎的TiKV），然后了解到这是Rust写的。。。emmmm。。。所以为了能够更好地了解设计，我觉得还是学一下Rust比较好（听说Rust这门语言还不错），虽然后面不">
+  <meta name="description" content="Glitter的Rust之旅（4）所有权，好像很厉害Rust是一门无需垃圾回收的即可保证内存安全的语言（GO语言就要），怎么做到呢，那当是通过所有权啦。所有权在Rust里的作用就是表明一个内存空间究竟属于哪个变量，并基于此制定Rust自己的规则，以及以此延伸出来的有关引用借用等概念。">
 <meta name="keywords" content="Rust">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Rust-1">
-<meta property="og:url" content="http://yoursite.com/2018/06/11/Rust-1/index.html">
+<meta property="og:title" content="Rust-4">
+<meta property="og:url" content="http://yoursite.com/2018/06/20/Rust-4/index.html">
 <meta property="og:site_name" content="Glitter&#39;s Blog">
-<meta property="og:description" content="Glitter的Rust之旅（1）没错，我又要开一个新坑，你猜我能坚持多久？因为一些机缘巧合（大概就是前一个项目还没着落，导师又刚好遇到另一家做开源存储系统的公司（大名鼎鼎的PingCAP），正好让我去了解一下这个公司的开源项目（大名鼎鼎的TiKV），然后了解到这是Rust写的。。。emmmm。。。所以为了能够更好地了解设计，我觉得还是学一下Rust比较好（听说Rust这门语言还不错），虽然后面不">
+<meta property="og:description" content="Glitter的Rust之旅（4）所有权，好像很厉害Rust是一门无需垃圾回收的即可保证内存安全的语言（GO语言就要），怎么做到呢，那当是通过所有权啦。所有权在Rust里的作用就是表明一个内存空间究竟属于哪个变量，并基于此制定Rust自己的规则，以及以此延伸出来的有关引用借用等概念。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fs7ihlbpo3j2037039web.jpg">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fs7hmko0yjj20nw0psju4.jpg">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fs7i3ptq9fj201r01smx6.jpg">
-<meta property="og:updated_time" content="2018-06-12T06:14:38.734Z">
+<meta property="og:image" content="https://kaisery.github.io/trpl-zh-cn/img/trpl04-01.svg">
+<meta property="og:image" content="https://kaisery.github.io/trpl-zh-cn/img/trpl04-04.svg">
+<meta property="og:image" content="https://kaisery.github.io/trpl-zh-cn/img/trpl04-03.svg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fshx3zttq4j20lb075mx4.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fshxdy5fh6j202902c746.jpg">
+<meta property="og:updated_time" content="2018-06-20T12:39:26.296Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Rust-1">
-<meta name="twitter:description" content="Glitter的Rust之旅（1）没错，我又要开一个新坑，你猜我能坚持多久？因为一些机缘巧合（大概就是前一个项目还没着落，导师又刚好遇到另一家做开源存储系统的公司（大名鼎鼎的PingCAP），正好让我去了解一下这个公司的开源项目（大名鼎鼎的TiKV），然后了解到这是Rust写的。。。emmmm。。。所以为了能够更好地了解设计，我觉得还是学一下Rust比较好（听说Rust这门语言还不错），虽然后面不">
-<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fs7ihlbpo3j2037039web.jpg">
+<meta name="twitter:title" content="Rust-4">
+<meta name="twitter:description" content="Glitter的Rust之旅（4）所有权，好像很厉害Rust是一门无需垃圾回收的即可保证内存安全的语言（GO语言就要），怎么做到呢，那当是通过所有权啦。所有权在Rust里的作用就是表明一个内存空间究竟属于哪个变量，并基于此制定Rust自己的规则，以及以此延伸出来的有关引用借用等概念。">
+<meta name="twitter:image" content="https://kaisery.github.io/trpl-zh-cn/img/trpl04-01.svg">
   
     <link rel="alternative" href="/atom.xml" title="Glitter&#39;s Blog" type="application/atom+xml">
   
@@ -163,37 +165,57 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Rust-1" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-Rust-4" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      Rust-1
+      Rust-4
     </h1>
   
 
         
-        <a href="/2018/06/11/Rust-1/" class="archive-article-date">
-  	<time datetime="2018-06-11T12:33:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-11</time>
+        <a href="/2018/06/20/Rust-4/" class="archive-article-date">
+  	<time datetime="2018-06-20T12:38:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-20</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="Glitter的Rust之旅（1）"><a href="#Glitter的Rust之旅（1）" class="headerlink" title="Glitter的Rust之旅（1）"></a>Glitter的Rust之旅（1）</h1><h2 id="没错，我又要开一个新坑，你猜我能坚持多久？"><a href="#没错，我又要开一个新坑，你猜我能坚持多久？" class="headerlink" title="没错，我又要开一个新坑，你猜我能坚持多久？"></a>没错，我又要开一个新坑，你猜我能坚持多久？</h2><p>因为一些机缘巧合（大概就是前一个项目还没着落，导师又刚好遇到另一家做开源存储系统的公司（大名鼎鼎的PingCAP），正好让我去了解一下这个公司的开源项目（大名鼎鼎的TiKV），然后了解到这是Rust写的。。。emmmm。。。所以为了能够更好地了解设计，我觉得还是学一下Rust比较好（听说Rust这门语言还不错），虽然后面不一定有项目而且也不一定能用的上，反正先学一点嘛，技多不压身（认真脸））<br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fs7ihlbpo3j2037039web.jpg" alt=""></p>
+        <h1 id="Glitter的Rust之旅（4）"><a href="#Glitter的Rust之旅（4）" class="headerlink" title="Glitter的Rust之旅（4）"></a>Glitter的Rust之旅（4）</h1><h2 id="所有权，好像很厉害"><a href="#所有权，好像很厉害" class="headerlink" title="所有权，好像很厉害"></a>所有权，好像很厉害</h2><p>Rust是一门无需垃圾回收的即可保证内存安全的语言（GO语言就要），怎么做到呢，那当是通过所有权啦。所有权在Rust里的作用就是表明一个内存空间究竟属于哪个变量，并基于此制定Rust自己的规则，以及以此延伸出来的有关引用借用等概念。</p>
 <a id="more"></a>
-<h2 id="Rust安装"><a href="#Rust安装" class="headerlink" title="Rust安装"></a>Rust安装</h2><p><strong>我！还没搞定啊</strong>（丢人！）<br>总之跟着官网的步骤走就应该没问题（我怎么就遇到问题了？）<br>首先打开官网下载exe<br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fs7hmko0yjj20nw0psju4.jpg" alt=""><br><em>注意到下面的windows安装注意事项，这里踩了个坑，所以我现在正在下载VS2017</em><br>装好之后的步骤下次再说吧，本来准备用Atom来写的，但是暂时先不管了，因为，我还没装好</p>
-<h2 id="Rust语法语义"><a href="#Rust语法语义" class="headerlink" title="Rust语法语义"></a>Rust语法语义</h2><h3 id="Rust的变量绑定"><a href="#Rust的变量绑定" class="headerlink" title="Rust的变量绑定"></a>Rust的变量绑定</h3><p>对于每一门语言的教程，第一章一定是讲的变量，你的C/C++教科书第一章一定是从<code>int i = 5</code>（你说i=10那我也没办法）开始的。燃鹅，Rust的画风好像有点不一样（也有可能是我见识浅薄了，吃了文化的亏），Rust的第一章，叫<strong>变量绑定</strong>。<br>变量绑定的画风是这样的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let x = 5;</span><br></pre></td></tr></table></figure></p>
-<p>而且注意到没，和<code>int i= 5</code>不一样的是，这里我们并没有告诉x，它的类型是啥，这在Rust中被叫做<strong>类型推断</strong>，也就是说他能自动识别x以及赋予其的值的类型，你就不需要明确地指出来了（对不起我第一次见这个，再次吃了文化的亏）。当然你要是实在想声明一个变量的类型，也可以做一个<strong>类型注解（Type annotations）</strong>，做法是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let x: i32 = 5;</span><br></pre></td></tr></table></figure></p>
-<p>这里的i32表示x是一个有符号32位整数，i表示有符号（u表示无符号），32表示32位。<br>又来了一个不一样的地方就是，你通过<code>let</code>声明的x的值，是不可变的，what？这么不走寻常路？接着Rust介绍了怎么声明一个可变的变量：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let mut y = 10;</span><br></pre></td></tr></table></figure></p>
-<p>OK，这样y就可以被随心所欲地进行赋值了。这样的规则和我们所接触到的C/C++是完全相反的，C/C++里默认声明的变量是可变的，而对于常量你需要显式地声明<code>const</code>，而Rust，一个新的变量绑定是默认不可变的，你需要显式地声明<code>mut</code>才能成为一个可变的绑定，这样你可能会问，Why？我哪知道，他说安全。<br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fs7i3ptq9fj201r01smx6.jpg" alt=""><br>好的我们继续，对于默认的一个绑定，由于它是不可变的，所以我们就必须为其进行<strong>初始化</strong>，比如如果你声明了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let x;</span><br></pre></td></tr></table></figure></p>
-<p>这个时候编译能通过，但是当你脑袋一抽，去访问x的值的时候，比如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let x;</span><br><span class="line">println!(&quot;x = &#123;&#125;&quot;, x);</span><br></pre></td></tr></table></figure></p>
-<p>就出问题了，哦没问题，因为你并不能通过编译(这里的{}类似于C/C++的printf中的%d的作用)<br>还有一个问题就是作用域的问题，和其它编程语言一样，Rust也有作用域的概念，也就是<strong>变量都对应了一个作用域，变量只能在其作用域内被访问</strong>，具体表现为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	let x = 5;</span><br><span class="line">    &#123;</span><br><span class="line">    	let y = 10;</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这里，y就不能在主函数内部被访问，因为y只属于他所在的那个程序块（{}内部），这一点跟其他编程语言是一致的。<br>然后还有一个问题，以前并没有注意到过，那就是隐藏，具体表现为<strong>同一作用域下后声明的绑定可以覆盖先声明的绑定</strong>，也就是这样的情况：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">let x = 5;</span><br><span class="line">...</span><br><span class="line">let mut x = 10;</span><br></pre></td></tr></table></figure></p>
-<p>这种情况Rust不会报重复定义的错，而是会将原来的x声明给覆盖，这造成的问题是，原来的x占用的空间仍然存在，而且你还访问不了（类似C++的没有释放内存的情况），所以还是需要注意避免这样的情况（不要let x写嗨了忘了前面用过x）</p>
+<h2 id="什么是所有权？"><a href="#什么是所有权？" class="headerlink" title="什么是所有权？"></a>什么是所有权？</h2><p>Rust的所有权是围绕内存安全的问题来的，也就是和内存的分配有关，这也是教程里一来就用很大的篇幅介绍了栈分配（stack）以及堆分配（heap）的概念的原因。当然，熟悉C/C++的应该都对这两种内存分配方式很熟悉，简单来说就是栈分配是针对编译时就确定内存大小的数据，而堆分配是针对大小未定而运行时我们再给定我们所需要内存空间大小的数据，类似C/C++的malloc/new。位于栈上的变量，失效之后就会被移除栈自动释放空间，而位于堆上的变量，则需要我们尽可能去减少冗余数据以及清理不需要的数据，以至于不会就将堆空间消耗完，这也就是所有权需要解决的事。（这些都是我的理解）</p>
+<h2 id="所有权规则"><a href="#所有权规则" class="headerlink" title="所有权规则"></a>所有权规则</h2><p>下面内容划重点：</p>
+<ul>
+<li>Rust中每个值都有一个所有者（owner）变量</li>
+<li>每个值有且仅有一个所有者</li>
+<li>所有者离开作用域之后，值会被丢弃</li>
+</ul>
+<p>以上三条关于所有权的规则，前面两条表明了每个值都一定对应唯一的所有者，而第三条则是跟作用域相关联。Rust的<strong>作用域（scope）</strong>和一般理解的作用域基本一致，而当一个变量进入作用域的时候开始生效，离开作用域之后立刻失效，并被自动回收。</p>
+<h2 id="String类型"><a href="#String类型" class="headerlink" title="String类型"></a>String类型</h2><p>为了方便介绍所有权，教程这里介绍了String类型，也就是字符串类型。<br>之前也接触过字符串，比如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let a = &quot;hello world&quot;;</span><br></pre></td></tr></table></figure></p>
+<p>这种字符串被称作字面值，被硬编码进程序，但是他们是不可变的（其实在C/C++也有这样的生命方式，而且关于他们为什么不可变还困扰了我很久）<br>但是不可能所有的字符串都能这样直接被声明，所以需要基于堆分配的字符串初始化方式，也就是这样：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let s = String::from(&quot;hello world&quot;);</span><br></pre></td></tr></table></figure></p>
+<p>这样声明就可以不用在编译的时候就知道字符串的长度，里面的helloworld还能是外部输入的字符串，而且如果把s声明为mut你还能修改它的值：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let mut s = String::from(&quot;hello&quot;);</span><br><span class="line">s.push_str(&quot;, world&quot;);</span><br></pre></td></tr></table></figure></p>
+<p>（其实用法和C++里面的string也很像的只不过语法上有区别，关于结构体后面再讲</p>
+<h2 id="内存与分配"><a href="#内存与分配" class="headerlink" title="内存与分配"></a>内存与分配</h2><p>在声明一个String类型之后需要考虑两个问题：</p>
+<ul>
+<li>什么时候分配内存</li>
+<li>分配的内存什么时候收回去<br>第一个问题答案是在调用String::from的时候分配所需要的内存，而第二个问题是离开作用域的时候回收。String有个drop函数用于释放String的内存空间（似李！析构函数），在离开作用域的{}之后会自动调用drop函数，以释放占用的内存空间。</li>
+</ul>
+<h2 id="变量与数据交互的方式——移动"><a href="#变量与数据交互的方式——移动" class="headerlink" title="变量与数据交互的方式——移动"></a>变量与数据交互的方式——移动</h2><p>接下来教程介绍了关于所有权的一些应用场景，而且感觉也是Rust特有的一些场景，比如一个移动。<br>例子就是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">let x = 5;</span><br><span class="line">let y = x;</span><br><span class="line">let s1 = String::from(&quot;hello world&quot;);</span><br><span class="line">let s2 = s1;</span><br></pre></td></tr></table></figure></p>
+<p>两组let看起来差不都但是本质上区别就很大，对于x/y这一组，由于是在栈上分配的，所以这里会获得两个变量，而且值都是5.如果你觉得你会获得两个hello world那就错了，这里就体现了Rust的特点。s1的声明的时候是这样：</p>
+<p><img src="https://kaisery.github.io/trpl-zh-cn/img/trpl04-01.svg" alt=""><br>但是经过下一个赋值之后，这个绑定被转移到了s2身上，<strong>同时s1不再有效</strong>，比如这个时候你再访问s1，在编译阶段你的编译器就会把你给毙了，因为s1已经不再有效。这个操作即为<strong>移动（move）</strong>。这样做的理由就是如果s1仍具有所有权，那么在离开作用域的时候，s1的空间将会被释放两次，从而出现double free的情况，Rust这样的设计就完美的避开了这样的情况出现。</p>
+<p><img src="https://kaisery.github.io/trpl-zh-cn/img/trpl04-04.svg" alt=""><br>其实这个概念就是C++里面常见到的深拷贝与浅拷贝的区别，前面<code>let s2 = s1</code>其实就是一个类似浅拷贝的过程。那如果我想进行深拷贝怎么办，Rust提供了一种方式叫做克隆。</p>
+<h2 id="变量与数据的交互方式——克隆"><a href="#变量与数据的交互方式——克隆" class="headerlink" title="变量与数据的交互方式——克隆"></a>变量与数据的交互方式——克隆</h2><p>用法就是这样：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let s1 = String::from(&quot;hello&quot;);</span><br><span class="line">let s2 = s1.clone();</span><br></pre></td></tr></table></figure></p>
+<p>这段代码里面访问s1就不会再出错，因为s2是指向另一段空间，并且复制了s1的内容。</p>
+<p><img src="https://kaisery.github.io/trpl-zh-cn/img/trpl04-03.svg" alt=""></p>
+<h2 id="所有权与函数"><a href="#所有权与函数" class="headerlink" title="所有权与函数"></a>所有权与函数</h2><p>前面讲了赋值的情况，那么如果是函数的参数以及返回值又是怎样的情况呢，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">fn take_ownership(s:String)&#123;</span><br><span class="line">    println!(&quot;s is &#123;&#125;&quot;, s);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn makes_copy(i:i32)&#123;</span><br><span class="line">    println!(&quot;i is &#123;&#125;&quot;, i);</span><br><span class="line">&#125;</span><br><span class="line">fn main() &#123;</span><br><span class="line">    let s = String::from(&quot;hello world&quot;);</span><br><span class="line">    take_ownership(s);</span><br><span class="line">    println!(&quot;s is &#123;&#125;&quot;, s);//错误，这个s已经失效</span><br><span class="line">    let x = 5;</span><br><span class="line">    makes_copy(x);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在这个代码里面，main中的s在调用take_ownership之后，其所有权会被这个函数的参数给拿走，这时候主函数里面的s就失效了，所以这个程序在编译阶段就会报错：<br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fshx3zttq4j20lb075mx4.jpg" alt=""><br>并且告诉你你用了一个被move的变量</p>
+<p>对于返回值，也可以转移作用域：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">fn give_ownership() -&gt; String&#123;</span><br><span class="line">    let s = String::from(&quot;hello&quot;);</span><br><span class="line">    s</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn takes_and_giveback(s:String) -&gt; String&#123;</span><br><span class="line">    s</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn main()&#123;</span><br><span class="line">    let s1 = give_ownership();</span><br><span class="line">    let s2 = String::from(&quot;world&quot;);</span><br><span class="line">    let s3 = takes_and_giveback(s2);</span><br><span class="line">    println!(&quot;s1 is &#123;&#125;&quot;, s1);</span><br><span class="line">    //println!(&quot;s2 is &#123;&#125;&quot;, s2);//s2失效，所有权转移到s3</span><br><span class="line">    println!(&quot;s3 is &#123;&#125;&quot;, s3);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>分析上面的程序就可以知道，通过give函数，s1获得了一个值的所有权所以在main里面我们能够打印它，而通过take_and_giveback函数，我们把s2的所有权拿走并通过返回值给了s3，所以在main里面s2就变得不能访问，而s3就可以正常访问</p>
+<p>那么如果我们想要在一个函数里面访问一个值，是不是就必须先获取所有权再返还所有权呢？那岂不是就需要返回多个值（你一定要这么做可以通过元组来实现），不过还有更简便的方法，那就是引用，C++ programmer表示很亲切，但是也很胃疼，下次再说吧，我要鸽了。<br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fshxdy5fh6j202902c746.jpg" alt=""></p>
 
       
 
@@ -274,7 +296,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/06/11/Rust-1/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/06/20/Rust-4/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -288,18 +310,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2018/06/12/Rust-2/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          Rust-2
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/06/11/一致性协议-2/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">一致性协议(2)</div>
+    <a href="/2018/06/19/Rust-3-5/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Rust-3.5</div>
       <i class="icon-circle-right"></i>
     </a>
   
