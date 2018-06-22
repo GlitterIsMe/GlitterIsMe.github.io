@@ -159,6 +159,93 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Rust-5-5" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/06/22/Rust-5-5/">Rust-5.5</a>
+    </h1>
+  
+
+        
+        <a href="/2018/06/22/Rust-5-5/" class="archive-article-date">
+  	<time datetime="2018-06-22T08:40:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Glitter的Rust之旅（5-5）"><a href="#Glitter的Rust之旅（5-5）" class="headerlink" title="Glitter的Rust之旅（5.5）"></a>Glitter的Rust之旅（5.5）</h1><h2 id="另一个不获取所有权的引用——Slice"><a href="#另一个不获取所有权的引用——Slice" class="headerlink" title="另一个不获取所有权的引用——Slice"></a>另一个不获取所有权的引用——Slice</h2><p>如果我们在一个函数里面希望通过操作能够返回一个字符串引用的一部分内容而不是全部，但是我们又没有所有权，不能对这个字符串做点什么，如何获取一个字符串的一部分引用，就是Slice要做的事。</p>
+        
+          <a class="article-more-a" href="/2018/06/22/Rust-5-5/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Rust</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Tech//" class="article-tag-list-link color5">Tech</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/06/22/Rust-5-5/">阅读全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Rust-5" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -963,101 +1050,6 @@
 
 
   
-    <article id="post-libzbc简介" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/05/11/libzbc简介/">libzbc简介</a>
-    </h1>
-  
-
-        
-        <a href="/2018/05/11/libzbc简介/" class="archive-article-date">
-  	<time datetime="2018-05-11T02:44:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-11</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="libzbc-and-lkvs"><a href="#libzbc-and-lkvs" class="headerlink" title="libzbc and lkvs"></a>libzbc and lkvs</h1><h2 id="libzbc"><a href="#libzbc" class="headerlink" title="libzbc"></a>libzbc</h2><h3 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h3><ul>
-<li>libzbc库提供了接口用于操作支持Zoned Block Command(ZBC)以及Zoned device ATA Command set(ZAC)这两个指令集的设备</li>
-<li>libzbc基于INCITS技术协会T10和T13起草的ZBC/ZAC标准实现</li>
-<li>允许应用访问ZBC HM磁盘</li>
-<li>通过直接执行<strong>SCSI(SG_IO)命令</strong>实现访问zone的信息以及读写操作</li>
-<li>为标准的SAS/SATA块设备上的操作提供ZBC模拟层（libzbc库内部会模拟磁盘的zone配置）<div align="center"><br><img src="https://ws1.sinaimg.cn/large/005xaSPRgy1fr76ar1pt4j30jr0890t5.jpg" alt="libzbc两种模式对比"><br></div>
-
-</li>
-</ul>
-        
-          <a class="article-more-a" href="/2018/05/11/libzbc简介/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">libzbc</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Tech//" class="article-tag-list-link color5">Tech</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/05/11/libzbc简介/">阅读全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1159,11 +1151,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Rust</a>
+                <a href="javascript:void(0)" class="js-tag color1">DarkSouls3</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">DarkSouls3</a>
+                <a href="javascript:void(0)" class="js-tag color5">Rust</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1175,11 +1167,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Web</a>
+                <a href="javascript:void(0)" class="js-tag color2">Consistency</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Consistency</a>
+                <a href="javascript:void(0)" class="js-tag color4">2PC</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1187,7 +1179,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">2PC</a>
+                <a href="javascript:void(0)" class="js-tag color4">Web</a>
               </li>
              
               <li class="article-tag-list-item">

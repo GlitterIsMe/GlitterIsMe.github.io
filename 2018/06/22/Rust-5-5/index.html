@@ -6,24 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Rust-1 | Glitter&#39;s Blog</title>
+  <title>Rust-5.5 | Glitter&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Glitter的Rust之旅（1）没错，我又要开一个新坑，你猜我能坚持多久？因为一些机缘巧合（大概就是前一个项目还没着落，导师又刚好遇到另一家做开源存储系统的公司（大名鼎鼎的PingCAP），正好让我去了解一下这个公司的开源项目（大名鼎鼎的TiKV），然后了解到这是Rust写的。。。emmmm。。。所以为了能够更好地了解设计，我觉得还是学一下Rust比较好（听说Rust这门语言还不错），虽然后面不">
+  <meta name="description" content="Glitter的Rust之旅（5.5）另一个不获取所有权的引用——Slice如果我们在一个函数里面希望通过操作能够返回一个字符串引用的一部分内容而不是全部，但是我们又没有所有权，不能对这个字符串做点什么，如何获取一个字符串的一部分引用，就是Slice要做的事。">
 <meta name="keywords" content="Rust">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Rust-1">
-<meta property="og:url" content="http://yoursite.com/2018/06/11/Rust-1/index.html">
+<meta property="og:title" content="Rust-5.5">
+<meta property="og:url" content="http://yoursite.com/2018/06/22/Rust-5-5/index.html">
 <meta property="og:site_name" content="Glitter&#39;s Blog">
-<meta property="og:description" content="Glitter的Rust之旅（1）没错，我又要开一个新坑，你猜我能坚持多久？因为一些机缘巧合（大概就是前一个项目还没着落，导师又刚好遇到另一家做开源存储系统的公司（大名鼎鼎的PingCAP），正好让我去了解一下这个公司的开源项目（大名鼎鼎的TiKV），然后了解到这是Rust写的。。。emmmm。。。所以为了能够更好地了解设计，我觉得还是学一下Rust比较好（听说Rust这门语言还不错），虽然后面不">
+<meta property="og:description" content="Glitter的Rust之旅（5.5）另一个不获取所有权的引用——Slice如果我们在一个函数里面希望通过操作能够返回一个字符串引用的一部分内容而不是全部，但是我们又没有所有权，不能对这个字符串做点什么，如何获取一个字符串的一部分引用，就是Slice要做的事。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fs7ihlbpo3j2037039web.jpg">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fs7hmko0yjj20nw0psju4.jpg">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fs7i3ptq9fj201r01smx6.jpg">
-<meta property="og:updated_time" content="2018-06-12T06:14:38.734Z">
+<meta property="og:updated_time" content="2018-06-22T08:40:51.179Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Rust-1">
-<meta name="twitter:description" content="Glitter的Rust之旅（1）没错，我又要开一个新坑，你猜我能坚持多久？因为一些机缘巧合（大概就是前一个项目还没着落，导师又刚好遇到另一家做开源存储系统的公司（大名鼎鼎的PingCAP），正好让我去了解一下这个公司的开源项目（大名鼎鼎的TiKV），然后了解到这是Rust写的。。。emmmm。。。所以为了能够更好地了解设计，我觉得还是学一下Rust比较好（听说Rust这门语言还不错），虽然后面不">
-<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/8c185877gy1fs7ihlbpo3j2037039web.jpg">
+<meta name="twitter:title" content="Rust-5.5">
+<meta name="twitter:description" content="Glitter的Rust之旅（5.5）另一个不获取所有权的引用——Slice如果我们在一个函数里面希望通过操作能够返回一个字符串引用的一部分内容而不是全部，但是我们又没有所有权，不能对这个字符串做点什么，如何获取一个字符串的一部分引用，就是Slice要做的事。">
   
     <link rel="alternative" href="/atom.xml" title="Glitter&#39;s Blog" type="application/atom+xml">
   
@@ -163,37 +159,41 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Rust-1" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-Rust-5-5" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      Rust-1
+      Rust-5.5
     </h1>
   
 
         
-        <a href="/2018/06/11/Rust-1/" class="archive-article-date">
-  	<time datetime="2018-06-11T12:33:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-11</time>
+        <a href="/2018/06/22/Rust-5-5/" class="archive-article-date">
+  	<time datetime="2018-06-22T08:40:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-22</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="Glitter的Rust之旅（1）"><a href="#Glitter的Rust之旅（1）" class="headerlink" title="Glitter的Rust之旅（1）"></a>Glitter的Rust之旅（1）</h1><h2 id="没错，我又要开一个新坑，你猜我能坚持多久？"><a href="#没错，我又要开一个新坑，你猜我能坚持多久？" class="headerlink" title="没错，我又要开一个新坑，你猜我能坚持多久？"></a>没错，我又要开一个新坑，你猜我能坚持多久？</h2><p>因为一些机缘巧合（大概就是前一个项目还没着落，导师又刚好遇到另一家做开源存储系统的公司（大名鼎鼎的PingCAP），正好让我去了解一下这个公司的开源项目（大名鼎鼎的TiKV），然后了解到这是Rust写的。。。emmmm。。。所以为了能够更好地了解设计，我觉得还是学一下Rust比较好（听说Rust这门语言还不错），虽然后面不一定有项目而且也不一定能用的上，反正先学一点嘛，技多不压身（认真脸））<br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fs7ihlbpo3j2037039web.jpg" alt=""></p>
+        <h1 id="Glitter的Rust之旅（5-5）"><a href="#Glitter的Rust之旅（5-5）" class="headerlink" title="Glitter的Rust之旅（5.5）"></a>Glitter的Rust之旅（5.5）</h1><h2 id="另一个不获取所有权的引用——Slice"><a href="#另一个不获取所有权的引用——Slice" class="headerlink" title="另一个不获取所有权的引用——Slice"></a>另一个不获取所有权的引用——Slice</h2><p>如果我们在一个函数里面希望通过操作能够返回一个字符串引用的一部分内容而不是全部，但是我们又没有所有权，不能对这个字符串做点什么，如何获取一个字符串的一部分引用，就是Slice要做的事。</p>
 <a id="more"></a>
-<h2 id="Rust安装"><a href="#Rust安装" class="headerlink" title="Rust安装"></a>Rust安装</h2><p><strong>我！还没搞定啊</strong>（丢人！）<br>总之跟着官网的步骤走就应该没问题（我怎么就遇到问题了？）<br>首先打开官网下载exe<br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fs7hmko0yjj20nw0psju4.jpg" alt=""><br><em>注意到下面的windows安装注意事项，这里踩了个坑，所以我现在正在下载VS2017</em><br>装好之后的步骤下次再说吧，本来准备用Atom来写的，但是暂时先不管了，因为，我还没装好</p>
-<h2 id="Rust语法语义"><a href="#Rust语法语义" class="headerlink" title="Rust语法语义"></a>Rust语法语义</h2><h3 id="Rust的变量绑定"><a href="#Rust的变量绑定" class="headerlink" title="Rust的变量绑定"></a>Rust的变量绑定</h3><p>对于每一门语言的教程，第一章一定是讲的变量，你的C/C++教科书第一章一定是从<code>int i = 5</code>（你说i=10那我也没办法）开始的。燃鹅，Rust的画风好像有点不一样（也有可能是我见识浅薄了，吃了文化的亏），Rust的第一章，叫<strong>变量绑定</strong>。<br>变量绑定的画风是这样的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let x = 5;</span><br></pre></td></tr></table></figure></p>
-<p>而且注意到没，和<code>int i= 5</code>不一样的是，这里我们并没有告诉x，它的类型是啥，这在Rust中被叫做<strong>类型推断</strong>，也就是说他能自动识别x以及赋予其的值的类型，你就不需要明确地指出来了（对不起我第一次见这个，再次吃了文化的亏）。当然你要是实在想声明一个变量的类型，也可以做一个<strong>类型注解（Type annotations）</strong>，做法是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let x: i32 = 5;</span><br></pre></td></tr></table></figure></p>
-<p>这里的i32表示x是一个有符号32位整数，i表示有符号（u表示无符号），32表示32位。<br>又来了一个不一样的地方就是，你通过<code>let</code>声明的x的值，是不可变的，what？这么不走寻常路？接着Rust介绍了怎么声明一个可变的变量：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let mut y = 10;</span><br></pre></td></tr></table></figure></p>
-<p>OK，这样y就可以被随心所欲地进行赋值了。这样的规则和我们所接触到的C/C++是完全相反的，C/C++里默认声明的变量是可变的，而对于常量你需要显式地声明<code>const</code>，而Rust，一个新的变量绑定是默认不可变的，你需要显式地声明<code>mut</code>才能成为一个可变的绑定，这样你可能会问，Why？我哪知道，他说安全。<br><img src="https://ws1.sinaimg.cn/large/8c185877gy1fs7i3ptq9fj201r01smx6.jpg" alt=""><br>好的我们继续，对于默认的一个绑定，由于它是不可变的，所以我们就必须为其进行<strong>初始化</strong>，比如如果你声明了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let x;</span><br></pre></td></tr></table></figure></p>
-<p>这个时候编译能通过，但是当你脑袋一抽，去访问x的值的时候，比如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let x;</span><br><span class="line">println!(&quot;x = &#123;&#125;&quot;, x);</span><br></pre></td></tr></table></figure></p>
-<p>就出问题了，哦没问题，因为你并不能通过编译(这里的{}类似于C/C++的printf中的%d的作用)<br>还有一个问题就是作用域的问题，和其它编程语言一样，Rust也有作用域的概念，也就是<strong>变量都对应了一个作用域，变量只能在其作用域内被访问</strong>，具体表现为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	let x = 5;</span><br><span class="line">    &#123;</span><br><span class="line">    	let y = 10;</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这里，y就不能在主函数内部被访问，因为y只属于他所在的那个程序块（{}内部），这一点跟其他编程语言是一致的。<br>然后还有一个问题，以前并没有注意到过，那就是隐藏，具体表现为<strong>同一作用域下后声明的绑定可以覆盖先声明的绑定</strong>，也就是这样的情况：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">let x = 5;</span><br><span class="line">...</span><br><span class="line">let mut x = 10;</span><br></pre></td></tr></table></figure></p>
-<p>这种情况Rust不会报重复定义的错，而是会将原来的x声明给覆盖，这造成的问题是，原来的x占用的空间仍然存在，而且你还访问不了（类似C++的没有释放内存的情况），所以还是需要注意避免这样的情况（不要let x写嗨了忘了前面用过x）</p>
+<h2 id="Slice的语法，从头到尾，切一段"><a href="#Slice的语法，从头到尾，切一段" class="headerlink" title="Slice的语法，从头到尾，切一段"></a>Slice的语法，从头到尾，切一段</h2><p>获取一个字符串的一段内容，可以通过这样的方式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">fn main() &#123;</span><br><span class="line">    let s1 = String::from(&quot;hello world&quot;);</span><br><span class="line">    let sl1 = &amp;s1[0..5];</span><br><span class="line">    let sl2 = &amp;s1[6..11];</span><br><span class="line">    println!(&quot;&#123;&#125;&quot;, sl1);</span><br><span class="line">    println!(&quot;&#123;&#125;&quot;, sl2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其中sl1和sl2就是两个Slice，Slice的语法就是<code>&amp;name[start..end]</code>，<code>start</code>就是你要切取的这段内容的第一个字符的索引位置，<code>end</code>的话，有点绕，应该是你要切取这段内容的最后一个字符的下一个位置，比如上面的hello，是0~4索引的字符，声明Slice的时候是&amp;s1[0..5]，另一个简单的算end的方法就是，用start加上你要截取的这段内容的长度，比如hello长度为5，start = 0， 那么end = start + 5 = 5（我真是个天才）<br>还有一个简化的点是，如果start为0，那么可以省略。比如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let sl1 = s1[0..5]</span><br></pre></td></tr></table></figure></p>
+<p>可以写成：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let sl1 = s1[..5]</span><br></pre></td></tr></table></figure></p>
+<p>同样，如果end是最后一个字节，那么end也可以省略，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let sl2 = &amp;s1[6..11];</span><br></pre></td></tr></table></figure></p>
+<p>可以写成：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let sl2 = &amp;s1[6..];</span><br></pre></td></tr></table></figure></p>
+<p>那么如果我们start和end都不写会怎样呢，那就是创建了一个和原来内容一样的Slice啦。</p>
+<h2 id="前面用到的Slice"><a href="#前面用到的Slice" class="headerlink" title="前面用到的Slice"></a>前面用到的Slice</h2><p>之前没注意，字符串的字面值其实就是一个全部引用的Slice，也就是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let s = &quot;hello world&quot;;</span><br></pre></td></tr></table></figure></p>
+<p>这里就是一个&amp;str的Slice，所以s的内容是不能改变的</p>
+<h2 id="在函数中使用Slice"><a href="#在函数中使用Slice" class="headerlink" title="在函数中使用Slice"></a>在函数中使用Slice</h2><p>要在函数里面使用Slice我们得直到他是啥类型，当然Slice不是简单的&amp;String类型，而是有个特别的类型，即<code>&amp;str</code><br>所以一个返回值为Slice的函数可以写成：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fn return_slice(s: &amp;String) -&gt; &amp;str&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当然一个函数的参数也可以用到Slice：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">fn SliceFunction(s: &amp;str)&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">fn main()&#123;</span><br><span class="line">	let a = String::from(&quot;hello world&quot;);</span><br><span class="line">    SliceFunction(a[..]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样做的好处是，当遇到上面字面值和一般字符串混用的情况，这样的代码能够更好地适应，因为字面值就是一个Slice，所以可以作为参数写进入，避免了一些不必要的错误。</p>
+<h2 id="其他类型也可以用Slice"><a href="#其他类型也可以用Slice" class="headerlink" title="其他类型也可以用Slice"></a>其他类型也可以用Slice</h2><p>其他的类型比如数组也可以使用Slice的语法，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let a = [1,2.3,4];</span><br><span class="line">let as = &amp;a[0..2];</span><br></pre></td></tr></table></figure></p>
+<p>这里的as类型就是一个&amp;[i32]</p>
 
       
 
@@ -274,7 +274,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/06/11/Rust-1/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/06/22/Rust-5-5/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -288,18 +288,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2018/06/12/Rust-2/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          Rust-2
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/06/11/一致性协议-2/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">一致性协议(2)</div>
+    <a href="/2018/06/22/Rust-5/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Rust-5</div>
       <i class="icon-circle-right"></i>
     </a>
   
