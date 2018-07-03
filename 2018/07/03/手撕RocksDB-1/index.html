@@ -6,18 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2018/5 | Glitter&#39;s Blog</title>
+  <title>手撕RocksDB-1 | Glitter&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="用于本人不定期更新一些杂七杂八的东西">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Glitter&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/archives/2018/05/index.html">
+  <meta name="description" content="手撕RocksDB（1）RocksDB的put操作">
+<meta name="keywords" content="RocksDB-代码分析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="手撕RocksDB-1">
+<meta property="og:url" content="http://yoursite.com/2018/07/03/手撕RocksDB-1/index.html">
 <meta property="og:site_name" content="Glitter&#39;s Blog">
-<meta property="og:description" content="用于本人不定期更新一些杂七杂八的东西">
+<meta property="og:description" content="手撕RocksDB（1）RocksDB的put操作">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-03T09:02:45.340Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Glitter&#39;s Blog">
-<meta name="twitter:description" content="用于本人不定期更新一些杂七杂八的东西">
+<meta name="twitter:title" content="手撕RocksDB-1">
+<meta name="twitter:description" content="手撕RocksDB（1）RocksDB的put操作">
   
     <link rel="alternative" href="/atom.xml" title="Glitter&#39;s Blog" type="application/atom+xml">
   
@@ -157,48 +159,69 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-手撕RocksDB-1" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      手撕RocksDB-1
+    </h1>
+  
+
+        
+        <a href="/2018/07/03/手撕RocksDB-1/" class="archive-article-date">
+  	<time datetime="2018-07-03T09:01:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-03</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="手撕RocksDB（1）"><a href="#手撕RocksDB（1）" class="headerlink" title="手撕RocksDB（1）"></a>手撕RocksDB（1）</h1><h2 id="RocksDB的put操作"><a href="#RocksDB的put操作" class="headerlink" title="RocksDB的put操作"></a>RocksDB的put操作</h2><a id="more"></a>
+<p>put函数有两个，分别是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">virtual Status Put(const WriteOptions&amp; options,</span><br><span class="line">                     ColumnFamilyHandle* column_family, const Slice&amp; key,</span><br><span class="line">                     const Slice&amp; value) = 0;</span><br></pre></td></tr></table></figure></p>
+<p>以及<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">virtual Status Put(const WriteOptions&amp; options, const Slice&amp; key,</span><br><span class="line">                     const Slice&amp; value) &#123;</span><br><span class="line">    return Put(options, DefaultColumnFamily(), key, value);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看待下面的put是封装的上面的put，值得注意的是与leveldb不同，rocksdb的put最基本的实现是要指定一个column family的</p>
+<h3 id="put实现"><a href="#put实现" class="headerlink" title="put实现"></a>put实现</h3><p>首先声明一个WriteBatch结构，然后调用WriteBatch的put接口将kv数据以及column family数据写入batch，最后调用Write函数进行写入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Status DB::Put(const WriteOptions&amp; opt, ColumnFamilyHandle* column_family,</span><br><span class="line">               const Slice&amp; key, const Slice&amp; value) &#123;</span><br><span class="line">  // Pre-allocate size of write batch conservatively.</span><br><span class="line">  // 8 bytes are taken by header, 4 bytes for count, 1 byte for type,</span><br><span class="line">  // and we allocate 11 extra bytes for key length, as well as value length.</span><br><span class="line">  WriteBatch batch(key.size() + value.size() + 24);</span><br><span class="line">  Status s = batch.Put(column_family, key, value);</span><br><span class="line">  if (!s.ok()) &#123;</span><br><span class="line">    return s;</span><br><span class="line">  &#125;</span><br><span class="line">  return Write(opt, &amp;batch);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="write实现"><a href="#write实现" class="headerlink" title="write实现"></a>write实现</h3><p>write通过封装WriteImpl函数实现，所以直接看WriteImpl，首先是排除一系列错误或者不支持的情况<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">if (my_batch == nullptr) &#123;</span><br><span class="line">  return Status::Corruption(&quot;Batch is nullptr!&quot;);</span><br><span class="line">&#125;</span><br><span class="line">if (write_options.sync &amp;&amp; write_options.disableWAL) &#123;</span><br><span class="line">  return Status::InvalidArgument(&quot;Sync writes has to enable WAL.&quot;);</span><br><span class="line">&#125;</span><br><span class="line">if (two_write_queues_ &amp;&amp; immutable_db_options_.enable_pipelined_write) &#123;</span><br><span class="line">  return Status::NotSupported(</span><br><span class="line">      &quot;pipelined_writes is not compatible with concurrent prepares&quot;);</span><br><span class="line">&#125;</span><br><span class="line">if (seq_per_batch_ &amp;&amp; immutable_db_options_.enable_pipelined_write) &#123;</span><br><span class="line">  // TODO(yiwu): update pipeline write with seq_per_batch and batch_cnt</span><br><span class="line">  return Status::NotSupported(</span><br><span class="line">      &quot;pipelined_writes is not compatible with seq_per_batch&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后是一系列的特殊情况，需要调用到其他的write实现<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">if (write_options.low_pri) &#123;</span><br><span class="line">    status = ThrottleLowPriWritesIfNeeded(write_options, my_batch);</span><br><span class="line">    if (!status.ok()) &#123;</span><br><span class="line">      return status;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  if (two_write_queues_ &amp;&amp; disable_memtable) &#123;//禁用memtable的情况</span><br><span class="line">    return WriteImplWALOnly(write_options, my_batch, callback, log_used,</span><br><span class="line">                            log_ref, seq_used, batch_cnt, pre_release_callback);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  if (immutable_db_options_.enable_pipelined_write) &#123;//pipeline write</span><br><span class="line">    return PipelinedWriteImpl(write_options, my_batch, callback, log_used,</span><br><span class="line">                              log_ref, disable_memtable, seq_used);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>通过一个Writer结构封装一系列参数，声明一个stopwatch结构，然后把封装了数据的writer通过JoinBatchGroup添加到write_thread中，接下来根据情况进行判断。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">PERF_TIMER_GUARD(write_pre_and_post_process_time);</span><br><span class="line">      //构建一个WriteThread::Writer</span><br><span class="line">      WriteThread::Writer w(write_options, my_batch, callback, log_ref,</span><br><span class="line">                            disable_memtable, batch_cnt, pre_release_callback);</span><br><span class="line"></span><br><span class="line">      if (!write_options.disableWAL) &#123;</span><br><span class="line">          RecordTick(stats_, WRITE_WITH_WAL);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      StopWatch write_sw(env_, immutable_db_options_.statistics.get(), DB_WRITE);</span><br></pre></td></tr></table></figure>
+<p>JoinBatchGroup函数内，WriteThread内部会尝试LinkOne判断该writer是不是第一个，如果是则将该Writer的状态设置成<code>STATE_GROUP_LEADER</code>，否则将会等待直到状态改变。</p>
+<p>插播一下WriteThread的五种状态：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">enum State : uint8_t &#123;</span><br><span class="line">	//writer的初始状态，等待JoinBatchGroup，后续可能变成</span><br><span class="line">    //STATE_GROUP_LEADER、STATE_COMPLETE、STATE_PARALLEL_FOLLOWER</span><br><span class="line">    STATE_INIT = 1,</span><br><span class="line"></span><br><span class="line">    //通知一个writer现在变成了leader并且他需要创建一个write batch gorup </span><br><span class="line">    STATE_GROUP_LEADER = 2,</span><br><span class="line"></span><br><span class="line">    //通知一个writer变成了一个memtable writer group的leader，leader要么将整个</span><br><span class="line">    //group写到memtable，要么调用LaunchParallelMemtableWrite</span><br><span class="line">    //发起一次并行写memtable </span><br><span class="line">    STATE_MEMTABLE_WRITER_LEADER = 4,</span><br><span class="line"></span><br><span class="line">    // 告知一个writer变成了一个parallel memtable writer，writer应该将其batch同步</span><br><span class="line">    //地应用到memtable并调用CompleteParallelMemtableWriter</span><br><span class="line">    STATE_PARALLEL_MEMTABLE_WRITER = 8,</span><br><span class="line"></span><br><span class="line">    //已经成功写入的writer</span><br><span class="line">    STATE_COMPLETED = 16,</span><br><span class="line"></span><br><span class="line">    // 告知thread需要等待StateMutex或者StateCondVar</span><br><span class="line">    STATE_LOCKED_WAITING = 32, </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>如果writer的state为WriteThread::STATE_PARALLEL_MEMTABLE_WRITER，说明当前的writer需要进行并行的memtable写</p>
+<p>ShouldWriteToMemtable跟状态有关没有特别的判断逻辑，所以首先就先将batch写入memtbale<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// we are a non-leader in a parallel group</span><br><span class="line"></span><br><span class="line">if (w.ShouldWriteToMemtable()) &#123;</span><br><span class="line">  PERF_TIMER_STOP(write_pre_and_post_process_time);</span><br><span class="line">  PERF_TIMER_GUARD(write_memtable_time);</span><br><span class="line"></span><br><span class="line">  ColumnFamilyMemTablesImpl column_family_memtables(</span><br><span class="line">      versions_-&gt;GetColumnFamilySet());</span><br><span class="line">  w.status = WriteBatchInternal::InsertInto(</span><br><span class="line">      &amp;w, w.sequence, &amp;column_family_memtables, &amp;flush_scheduler_,</span><br><span class="line">      write_options.ignore_missing_column_families, 0 /*log_number*/, this,</span><br><span class="line">      true /*concurrent_memtable_writes*/, seq_per_batch_, w.batch_cnt);</span><br><span class="line"></span><br><span class="line">  PERF_TIMER_START(write_pre_and_post_process_time);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>通过CompleteParallelMemtableWrite函数判断当前这个writer是不是writegroup里面最后一个完成的，如果不是则不用执行里面的操作，如果是则需要执行退出的操作，<br>退出操作就是执行回调函数之后并且更新sequence number</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">if (write_thread_.CompleteParallelMemTableWriter(&amp;w)) &#123;</span><br><span class="line">  // we&apos;re responsible for exit batch group</span><br><span class="line">  for (auto* writer : *(w.write_group)) &#123;</span><br><span class="line">    if (!writer-&gt;CallbackFailed() &amp;&amp; writer-&gt;pre_release_callback) &#123;</span><br><span class="line">      assert(writer-&gt;sequence != kMaxSequenceNumber);</span><br><span class="line">      Status ws = writer-&gt;pre_release_callback-&gt;Callback(writer-&gt;sequence,</span><br><span class="line">                                                         disable_memtable);</span><br><span class="line">      if (!ws.ok()) &#123;</span><br><span class="line">        status = ws;</span><br><span class="line">        break;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  // TODO(myabandeh): propagate status to write_group</span><br><span class="line">  auto last_sequence = w.write_group-&gt;last_sequence;</span><br><span class="line">  versions_-&gt;SetLastSequence(last_sequence);</span><br><span class="line">  MemTableInsertStatusCheck(w.status);</span><br><span class="line">  write_thread_.ExitAsBatchGroupFollower(&amp;w);</span><br><span class="line">&#125;</span><br><span class="line">assert(w.state == WriteThread::STATE_COMPLETED);</span><br><span class="line">// STATE_COMPLETED conditional below handles exit</span><br><span class="line"></span><br><span class="line">status = w.FinalStatus();</span><br></pre></td></tr></table></figure>
+<p>如果writer的state为WriteThread::STATE_COMPLETED，则返回，至此完成了parallel memtable write<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">if (w.state == WriteThread::STATE_COMPLETED) &#123;</span><br><span class="line">            if (log_used != nullptr) &#123;</span><br><span class="line">                *log_used = w.log_used;</span><br><span class="line">            &#125;</span><br><span class="line">            if (seq_used != nullptr) &#123;</span><br><span class="line">                *seq_used = w.sequence;</span><br><span class="line">            &#125;</span><br><span class="line">            // write is complete and leader has updated sequence</span><br><span class="line">            return w.FinalStatus();</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></p>
+<p>接下来是当前的writer成为leader的情况<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">assert(w.state == WriteThread::STATE_GROUP_LEADER);</span><br><span class="line"></span><br><span class="line">        // Once reaches this point, the current writer &quot;w&quot; will try to do its write</span><br><span class="line">        // job.  It may also pick up some of the remaining writers in the &quot;writers_&quot;</span><br><span class="line">        // when it finds suitable, and finish them in the same write batch.</span><br><span class="line">        // This is how a write job could be done by the other writer.</span><br><span class="line">        WriteContext write_context;</span><br><span class="line">        WriteThread::WriteGroup write_group;</span><br><span class="line">        bool in_parallel_group = false;</span><br><span class="line">        uint64_t last_sequence = kMaxSequenceNumber;</span><br><span class="line">        if (!two_write_queues_) &#123;</span><br><span class="line">            last_sequence = versions_-&gt;LastSequence();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        mutex_.Lock();</span><br><span class="line"></span><br><span class="line">        bool need_log_sync = write_options.sync;</span><br><span class="line">        bool need_log_dir_sync = need_log_sync &amp;&amp; !log_dir_synced_;</span><br></pre></td></tr></table></figure></p>
+<p>首先进行预写(PreProcessWrite)，判断当前的memtable是不是写满了，然后进行刷写以及更换新的memtable<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">if (!two_write_queues_ || !disable_memtable) &#123;</span><br><span class="line">            //预写过程，判断memtbale是不是需要更换</span><br><span class="line">            // With concurrent writes we do preprocess only in the write thread that</span><br><span class="line">            // also does write to memtable to avoid sync issue on shared data structure</span><br><span class="line">            // with the other thread</span><br><span class="line">            //在并行写的时候，仅在写入memtbale的线程中进行preprocess</span><br><span class="line">            //来避免与另一个线程的共享数据结构（memtable？）中的同步操作</span><br><span class="line"></span><br><span class="line">            // PreprocessWrite does its own perf timing.</span><br><span class="line">            PERF_TIMER_STOP(write_pre_and_post_process_time);</span><br><span class="line"></span><br><span class="line">            status = PreprocessWrite(write_options, &amp;need_log_sync, &amp;write_context);</span><br><span class="line"></span><br><span class="line">            PERF_TIMER_START(write_pre_and_post_process_time);</span><br><span class="line">        &#125;</span><br><span class="line">log::Writer *log_writer = logs_.back().writer;</span><br><span class="line"></span><br><span class="line">        mutex_.Unlock();</span><br><span class="line"></span><br><span class="line">        // Add to log and apply to memtable.  We can release the lock</span><br><span class="line">        // during this phase since &amp;w is currently responsible for logging</span><br><span class="line">        // and protects against concurrent loggers and concurrent writes</span><br><span class="line">        // into memtables</span><br><span class="line"></span><br><span class="line">        TEST_SYNC_POINT(&quot;DBImpl::WriteImpl:BeforeLeaderEnters&quot;);</span><br></pre></td></tr></table></figure></p>
+<p>然后对writer进行group操作，EnterAsBatchGroupLeader会在一定的大小阈值（1MB/1MB+128K）内将别的writer加入到当前leader的write_group中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">last_batch_group_size_ =</span><br><span class="line">                write_thread_.EnterAsBatchGroupLeader(&amp;w, &amp;write_group);</span><br></pre></td></tr></table></figure></p>
+<p>接着对计算整个group的size并判断是否能够并行写<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">if (status.ok()) &#123;</span><br><span class="line">            // Rules for when we can update the memtable concurrently</span><br><span class="line">            // 1. supported by memtable</span><br><span class="line">            // 2. Puts are not okay if inplace_update_support</span><br><span class="line">            // 3. Merges are not okay</span><br><span class="line">            //</span><br><span class="line">            // Rules 1..2 are enforced by checking the options</span><br><span class="line">            // during startup (CheckConcurrentWritesSupported), so if</span><br><span class="line">            // options.allow_concurrent_memtable_write is true then they can be</span><br><span class="line">            // assumed to be true.  Rule 3 is checked for each batch.  We could</span><br><span class="line">            // relax rules 2 if we could prevent write batches from referring</span><br><span class="line">            // more than once to a particular key.</span><br><span class="line">            //是否允许并行写</span><br><span class="line">            bool parallel = immutable_db_options_.allow_concurrent_memtable_write &amp;&amp; write_group.size &gt; 1;//允许并行memtable写以及write_group中有大于1个写请求</span><br><span class="line">            size_t total_count = 0;</span><br><span class="line">            size_t valid_batches = 0;</span><br><span class="line">            size_t total_byte_size = 0;</span><br><span class="line">            for (auto *writer : write_group) &#123;</span><br><span class="line">                if (writer-&gt;CheckCallback(this)) &#123;</span><br><span class="line">                    valid_batches += writer-&gt;batch_cnt;</span><br><span class="line">                    if (writer-&gt;ShouldWriteToMemtable()) &#123;</span><br><span class="line">                        total_count += WriteBatchInternal::Count(writer-&gt;batch);</span><br><span class="line">                        parallel = parallel &amp;&amp; !writer-&gt;batch-&gt;HasMerge();//对应第3点</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    total_byte_size = WriteBatchInternal::AppendedByteSize(</span><br><span class="line">                            total_byte_size, WriteBatchInternal::ByteSize(writer-&gt;batch));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            // Note about seq_per_batch_: either disableWAL is set for the entire write</span><br><span class="line">            // group or not. In either case we inc seq for each write batch with no</span><br><span class="line">            // failed callback. This means that there could be a batch with</span><br><span class="line">            // disalbe_memtable in between; although we do not write this batch to</span><br><span class="line">            // memtable it still consumes a seq. Otherwise, if !seq_per_batch_, we inc</span><br><span class="line">            // the seq per valid written key to mem.</span><br><span class="line">            size_t seq_inc = seq_per_batch_ ? valid_batches : total_count;</span><br><span class="line"></span><br><span class="line">            const bool concurrent_update = two_write_queues_;</span><br><span class="line">            // Update stats while we are an exclusive group leader, so we know</span><br><span class="line">            // that nobody else can be writing to these particular stats.</span><br><span class="line">            // We&apos;re optimistic, updating the stats before we successfully</span><br><span class="line">            // commit.  That lets us release our leader status early.</span><br><span class="line">            auto stats = default_cf_internal_stats_;</span><br><span class="line">            stats-&gt;AddDBStats(InternalStats::NUMBER_KEYS_WRITTEN, total_count,</span><br><span class="line">                              concurrent_update);</span><br><span class="line">            RecordTick(stats_, NUMBER_KEYS_WRITTEN, total_count);</span><br><span class="line">            stats-&gt;AddDBStats(InternalStats::BYTES_WRITTEN, total_byte_size,</span><br><span class="line">                              concurrent_update);</span><br><span class="line">            RecordTick(stats_, BYTES_WRITTEN, total_byte_size);</span><br><span class="line">            stats-&gt;AddDBStats(InternalStats::WRITE_DONE_BY_SELF, 1, concurrent_update);</span><br><span class="line">            RecordTick(stats_, WRITE_DONE_BY_SELF);</span><br><span class="line">            auto write_done_by_other = write_group.size - 1;</span><br><span class="line">            if (write_done_by_other &gt; 0) &#123;</span><br><span class="line">                stats-&gt;AddDBStats(InternalStats::WRITE_DONE_BY_OTHER, write_done_by_other,</span><br><span class="line">                                  concurrent_update);</span><br><span class="line">                RecordTick(stats_, WRITE_DONE_BY_OTHER, write_done_by_other);</span><br><span class="line">            &#125;</span><br><span class="line">            MeasureTime(stats_, BYTES_PER_WRITE, total_byte_size);</span><br><span class="line"></span><br><span class="line">            if (write_options.disableWAL) &#123;</span><br><span class="line">                has_unpersisted_data_.store(true, std::memory_order_relaxed);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            PERF_TIMER_STOP(write_pre_and_post_process_time);</span><br></pre></td></tr></table></figure></p>
+<p>接着写Write ahead log，这里分了两种情况，如果two_write_queues_为true表示将写memtable和其他写分开成两个queue（代码注释直译，具体实现还没找到），最终的区别是调用函数的区别，一个是WriteToWAL，另一个是ConcurrentWriteToWAL，最后更新sequence<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">if (!two_write_queues_) &#123;</span><br><span class="line">    if (status.ok() &amp;&amp; !write_options.disableWAL) &#123;</span><br><span class="line">        PERF_TIMER_GUARD(write_wal_time);</span><br><span class="line">        //写到log中</span><br><span class="line">        status = WriteToWAL(write_group, log_writer, log_used, need_log_sync,</span><br><span class="line">                            need_log_dir_sync, last_sequence + 1);</span><br><span class="line">    &#125;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    if (status.ok() &amp;&amp; !write_options.disableWAL) &#123;</span><br><span class="line">        PERF_TIMER_GUARD(write_wal_time);</span><br><span class="line">        // LastAllocatedSequence is increased inside WriteToWAL under</span><br><span class="line">        // wal_write_mutex_ to ensure ordered events in WAL</span><br><span class="line">        //并行写到log去</span><br><span class="line">        status = ConcurrentWriteToWAL(write_group, log_used, &amp;last_sequence,</span><br><span class="line">                                      seq_inc);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        // Otherwise we inc seq number for memtable writes</span><br><span class="line">        last_sequence = versions_-&gt;FetchAddLastAllocatedSequence(seq_inc);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">assert(last_sequence != kMaxSequenceNumber);</span><br><span class="line">const SequenceNumber current_sequence = last_sequence + 1;</span><br><span class="line">last_sequence += seq_inc;</span><br></pre></td></tr></table></figure></p>
+<p>写memtable，分成两种情况，分别是非并行写以及并行写，非并行写的情况由当前线程完成所有写的内容，并行写的情况下所有的follower自己完成自己的写<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">if (status.ok()) &#123;</span><br><span class="line">                PERF_TIMER_GUARD(write_memtable_time);</span><br><span class="line"></span><br><span class="line">                if (!parallel) &#123;</span><br><span class="line">                    // w.sequence will be set inside InsertInto</span><br><span class="line">                    //非并行，由当前线程写所有的内容</span><br><span class="line">                    w.status = WriteBatchInternal::InsertInto(</span><br><span class="line">                            write_group, current_sequence, column_family_memtables_.get(),</span><br><span class="line">                            &amp;flush_scheduler_, write_options.ignore_missing_column_families,</span><br><span class="line">                            0 /*recovery_log_number*/, this, parallel, seq_per_batch_);</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    //并行，所有的follower自己写自己的内容</span><br><span class="line">                    SequenceNumber next_sequence = current_sequence;</span><br><span class="line">                    // Note: the logic for advancing seq here must be consistent with the</span><br><span class="line">                    // logic in WriteBatchInternal::InsertInto(write_group...) as well as</span><br><span class="line">                    // with WriteBatchInternal::InsertInto(write_batch...) that is called on</span><br><span class="line">                    // the merged batch during recovery from the WAL.</span><br><span class="line">                    for (auto *writer : write_group) &#123;</span><br><span class="line">                        if (writer-&gt;CallbackFailed()) &#123;</span><br><span class="line">                            continue;</span><br><span class="line">                        &#125;</span><br><span class="line">                        writer-&gt;sequence = next_sequence;</span><br><span class="line">                        if (seq_per_batch_) &#123;</span><br><span class="line">                            assert(writer-&gt;batch_cnt);</span><br><span class="line">                            next_sequence += writer-&gt;batch_cnt;</span><br><span class="line">                        &#125; else if (writer-&gt;ShouldWriteToMemtable()) &#123;</span><br><span class="line">                            next_sequence += WriteBatchInternal::Count(writer-&gt;batch);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    write_group.last_sequence = last_sequence;</span><br><span class="line">                    write_group.running.store(static_cast&lt;uint32_t&gt;(write_group.size),</span><br><span class="line">                                              std::memory_order_relaxed);</span><br><span class="line">                    write_thread_.LaunchParallelMemTableWriters(&amp;write_group);</span><br><span class="line">                    in_parallel_group = true;</span><br><span class="line"></span><br><span class="line">                    // Each parallel follower is doing each own writes. The leader should</span><br><span class="line">                    // also do its own.</span><br><span class="line">                    //所有的follower并行地开始写自己的writer</span><br><span class="line">                    if (w.ShouldWriteToMemtable()) &#123;</span><br><span class="line">                        ColumnFamilyMemTablesImpl column_family_memtables(</span><br><span class="line">                                versions_-&gt;GetColumnFamilySet());</span><br><span class="line">                        assert(w.sequence == current_sequence);</span><br><span class="line">                        w.status = WriteBatchInternal::InsertInto(</span><br><span class="line">                                &amp;w, w.sequence, &amp;column_family_memtables, &amp;flush_scheduler_,</span><br><span class="line">                                write_options.ignore_missing_column_families, 0 /*log_number*/,</span><br><span class="line">                                this, true /*concurrent_memtable_writes*/, seq_per_batch_,</span><br><span class="line">                                w.batch_cnt);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                if (seq_used != nullptr) &#123;</span><br><span class="line">                    *seq_used = w.sequence;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        PERF_TIMER_START(write_pre_and_post_process_time);</span><br></pre></td></tr></table></figure></p>
+<p>后续更新，比如更新log内容 以及执行完成的回调工作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">if (!w.CallbackFailed()) &#123;</span><br><span class="line">            WriteStatusCheck(status);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (need_log_sync) &#123;</span><br><span class="line">            //同步log</span><br><span class="line">            mutex_.Lock();</span><br><span class="line">            MarkLogsSynced(logfile_number_, need_log_dir_sync, status);</span><br><span class="line">            mutex_.Unlock();</span><br><span class="line">            // Requesting sync with two_write_queues_ is expected to be very rare. We</span><br><span class="line">            // hence provide a simple implementation that is not necessarily efficient.</span><br><span class="line">            if (two_write_queues_) &#123;</span><br><span class="line">                if (manual_wal_flush_) &#123;</span><br><span class="line">                    status = FlushWAL(true);</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    status = SyncWAL();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        bool should_exit_batch_group = true;</span><br><span class="line">        if (in_parallel_group) &#123;</span><br><span class="line">            // CompleteParallelWorker returns true if this thread should</span><br><span class="line">            // handle exit, false means somebody else did</span><br><span class="line">            //如果是一个并行写的group，就需要判断当前这个writer是不是需要处理退出流程（也就是最后一个完成的）</span><br><span class="line">            should_exit_batch_group = write_thread_.CompleteParallelMemTableWriter(&amp;w);</span><br><span class="line">        &#125;</span><br><span class="line">        if (should_exit_batch_group) &#123;</span><br><span class="line">            //当前的writer应该执行退出流程</span><br><span class="line">            if (status.ok()) &#123;</span><br><span class="line">                for (auto *writer : write_group) &#123;</span><br><span class="line">                    if (!writer-&gt;CallbackFailed() &amp;&amp; writer-&gt;pre_release_callback) &#123;</span><br><span class="line">                        assert(writer-&gt;sequence != kMaxSequenceNumber);</span><br><span class="line">                        Status ws = writer-&gt;pre_release_callback-&gt;Callback(writer-&gt;sequence,</span><br><span class="line">                                                                           disable_memtable);</span><br><span class="line">                        if (!ws.ok()) &#123;</span><br><span class="line">                            status = ws;</span><br><span class="line">                            break;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                versions_-&gt;SetLastSequence(last_sequence);</span><br><span class="line">            &#125;</span><br><span class="line">            MemTableInsertStatusCheck(w.status);</span><br><span class="line">            write_thread_.ExitAsBatchGroupLeader(write_group, status);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (status.ok()) &#123;</span><br><span class="line">            status = w.FinalStatus();</span><br><span class="line">        &#125;</span><br><span class="line">        return status;</span><br></pre></td></tr></table></figure></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/05/11/libzbc简介/" class="archive-article-date">
-  	<time datetime="2018-05-11T02:44:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/05/11/libzbc简介/">libzbc简介</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">libzbc</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">RocksDB-代码分析</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -211,311 +234,104 @@
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/07/03/手撕RocksDB-1/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/05/10/前端学习路线/" class="archive-article-date">
-  	<time datetime="2018-05-10T02:13:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-10</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2018/06/22/Rust-5-5/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Rust-5.5</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/05/10/前端学习路线/">前端学习路线</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Web</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Tech//" class="article-tag-list-link color5">Tech</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/05/08/DarkSoulsIII-1/" class="archive-article-date">
-  	<time datetime="2018-05-08T10:57:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-08</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/05/08/DarkSoulsIII-1/">DarkSoulsIII-1</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">DarkSouls3</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Hobby//" class="article-tag-list-link color1">Hobby</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/05/07/DarkSoulsIII-0/" class="archive-article-date">
-  	<time datetime="2018-05-07T11:14:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-07</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/05/07/DarkSoulsIII-0/">DarkSoulsIII-0</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">DarkSouls3</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Hobby//" class="article-tag-list-link color1">Hobby</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/05/03/BeeGFS一个介绍PPT/" class="archive-article-date">
-  	<time datetime="2018-05-03T12:37:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-03</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/05/03/BeeGFS一个介绍PPT/">BeeGFS一个介绍PPT</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">BeeGFS</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Tech//" class="article-tag-list-link color5">Tech</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/05/03/BeeGFS代码结构/" class="archive-article-date">
-  	<time datetime="2018-05-03T12:36:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-03</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/05/03/BeeGFS代码结构/">BeeGFS代码结构</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">BeeGFS</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Tech//" class="article-tag-list-link color5">Tech</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/05/02/BeeOND安装与使用/" class="archive-article-date">
-  	<time datetime="2018-05-02T11:37:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-02</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/05/02/BeeOND安装与使用/">BeeOND安装与使用</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">BeeOND</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Tech//" class="article-tag-list-link color5">Tech</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -538,8 +354,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
